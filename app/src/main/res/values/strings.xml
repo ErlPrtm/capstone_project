@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Aji</string>
+    <string name="login">Login</string>
+    <string name="usernameTitle">Username</string>
+    <string name="passwordTitle">Password</string>
+    <string name="inputUsernameHint">Input your Username</string>
+    <string name="inputPasswordHint">Input your Password</string>
+    <string name="login_button_hint">Login</string>
+    <string name="forgot_password">Forgot Password ?</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="bottom_nav_home">Home</string>
+    <string name="bottom_nav_analytics">Analytics</string>
+    <string name="bottom_nav_absence">Absence</string>
+    <string name="bottom_nav_account">Account</string>
+    <string name="bottom_nav_settings">Settings</string>
+    <string name="month_placeholder">Month</string>
+    <string name="date_placeholder">Date</string>
+    <string name="clock_placeholder">Clock</string>
+    <string name="caption_attendance">Attendance</string>
+    <string name="caption_checkOut">Check Out</string>
+    <string name="caption_totalHours">Total Hours</string>
+</resources>

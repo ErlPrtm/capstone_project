@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:title="@string/bottom_nav_home"
+        android:icon="@drawable/baseline_home"/>
+    <item
+        android:title="@string/bottom_nav_analytics"
+        android:icon="@drawable/baseline_analytics"/>
+    <item
+        android:title="@string/bottom_nav_absence"
+        android:icon="@drawable/rounded_account_box_24"/>
+    <item
+        android:title="@string/bottom_nav_account"
+        android:icon="@drawable/outline_account_circle"/>
+    <item
+        android:title="@string/bottom_nav_settings"
+        android:icon="@drawable/outline_settings_24"/>
+</menu>
