@@ -8,5 +8,6 @@
 
     <color name="md_theme_primary">#FFFFFF</color>
     <color name="md_theme_onPrimary">#00796B</color>
-    <color name="md_theme_onPrimaryContainer">#EBEBEB</color>
+    <color name="md_theme_primaryContainer">#EBEBEB</color>
+    <color name="md_theme_onPrimaryContainer">#5A5A5A</color>
 </resources>

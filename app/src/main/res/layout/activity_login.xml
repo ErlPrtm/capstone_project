@@ -10,8 +10,8 @@
         android:id="@+id/vector_1"
         android:layout_width="532dp"
         android:layout_height="138.75dp"
-        android:layout_marginBottom="100dp"
-        android:background="@color/md_theme_onprimary"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/wavy_login"
         app:layout_constraintBottom_toTopOf="@+id/tvLogin"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -24,6 +24,7 @@
         android:layout_marginTop="120dp"
         android:text="@string/login"
         android:textSize="64sp"
+        android:fontFamily="@font/italiana_regular"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -51,6 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
+                android:fontFamily="@font/poppins_regular"
                 android:text="@string/usernameTitle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -62,8 +64,9 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/round_edittext"
+                android:fontFamily="@font/poppins_regular"
                 android:hint="@string/inputUsernameHint"
-                android:padding="12dp" />
+                android:padding="10dp" />
 
             <TextView
                 android:id="@+id/tvPassword2"
@@ -71,6 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_weight="1"
+                android:fontFamily="@font/poppins_regular"
                 android:text="@string/passwordTitle" />
 
             <com.google.android.material.textfield.TextInputEditText
@@ -80,8 +84,9 @@
                 android:layout_marginTop="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/round_edittext"
+                android:fontFamily="@font/poppins_regular"
                 android:hint="@string/inputPasswordHint"
-                android:padding="12dp" />
+                android:padding="10dp" />
 
             <Button
                 android:id="@+id/loginButton"
@@ -90,13 +95,14 @@
                 android:layout_marginTop="20dp"
                 android:layout_weight="1"
                 android:background="@drawable/login_round_button"
-                android:backgroundTint="@color/md_theme_onprimary"
+                android:backgroundTint="@color/md_theme_onPrimary"
+                android:fontFamily="@font/poppins_regular"
                 android:text="@string/login_button_hint"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/inputPassword"
                 tools:background="@drawable/login_round_button"
-                tools:backgroundTint="@color/md_theme_onprimary" />
+                tools:backgroundTint="@color/md_theme_onPrimary" />
 
             <TextView
                 android:id="@+id/tvForgetPassword"
@@ -104,6 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_weight="1"
+                android:fontFamily="@font/poppins_regular"
                 android:text="@string/forgot_password"
                 android:textStyle="italic" />
         </LinearLayout>
@@ -114,10 +121,12 @@
         android:id="@+id/vector_2"
         android:layout_width="532dp"
         android:layout_height="138.75dp"
-        android:background="@color/md_theme_onprimary"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="56dp"
+        android:background="@drawable/wavy_login_mirorred"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginCard" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
