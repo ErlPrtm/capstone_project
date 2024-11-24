@@ -70,4 +70,9 @@
     <string name="dark_mode_enabled">Mode gelap diaktifkan</string>
     <string name="dark_mode_disabled">Mode gelap dinonaktifkan</string>
     <string name="logged_out_message">Anda telah keluar</string>
+
+    <!--  HOME  -->
+
+    <string name="attendance_history_title">Riwayat Kehadiran</string>
+
 </resources>

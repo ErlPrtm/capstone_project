@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="Aji.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-11-24T10:53:45.694353400Z">
+        <DropdownSelection timestamp="2024-11-24T10:59:49.410713400Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=121955445V100162" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\dyori\.android\avd\Pixel_8_Pro_API_34.avd" />
             </handle>
           </Target>
         </DropdownSelection>

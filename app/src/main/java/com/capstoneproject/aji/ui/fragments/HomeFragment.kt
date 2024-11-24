@@ -2,10 +2,10 @@ package com.capstoneproject.aji.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -24,6 +24,8 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var viewModel: PegawaiViewModel
     private lateinit var userPreferences: UserPreferences
+    private lateinit var handler: Handler
+    private lateinit var greetingRunnable: Runnable
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +37,8 @@ class HomeFragment : Fragment() {
 
         checkAuthenticationAndLoadData()
         setDateToday()
+        setGreetings()
+        startRealTimeGreetingUpdate()
 
         return binding.root
     }
@@ -53,6 +57,29 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun setGreetings() {
+        val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+
+        val greeting = when {
+            currentHour in 5..11 -> "Halo, Selamat Pagi"
+            currentHour in 12..15 -> "Halo, Selamat Siang"
+            currentHour in 16..18 -> "Halo, Selamat Sore"
+            else -> "Halo, Selamat Malam"
+        }
+
+        binding.tvGreetings.text = greeting
+    }
+
+    private fun startRealTimeGreetingUpdate() {
+        handler = Handler()
+        greetingRunnable = object : Runnable {
+            override fun run() {
+                setGreetings()
+                handler.postDelayed(this, 60 * 1000)
+            }
+        }
+        handler.post(greetingRunnable)
+    }
 
     private fun redirectToLogin() {
         val intent = Intent(requireContext(), LoginActivity::class.java)
@@ -85,6 +112,7 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        handler.removeCallbacks(greetingRunnable)
         _binding = null
     }
 }
