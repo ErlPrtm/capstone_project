@@ -4,129 +4,105 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".ui.login.LoginActivity">
 
     <View
         android:id="@+id/vector_1"
         android:layout_width="532dp"
         android:layout_height="138.75dp"
-        android:layout_marginBottom="16dp"
         android:background="@drawable/wavy_login"
-        app:layout_constraintBottom_toTopOf="@+id/tvLogin"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tvLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
-        android:text="@string/login"
-        android:textSize="64sp"
-        android:fontFamily="@font/italiana_regular"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/loginCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvLogin">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="20dp">
+
+            <TextView
+                android:id="@+id/tvLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login"
+                android:textSize="64sp"
+                android:fontFamily="@font/italiana_regular"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp" />
 
             <TextView
                 android:id="@+id/tvUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/poppins_regular"
                 android:text="@string/usernameTitle"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:fontFamily="@font/poppins_regular" />
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputUsername"
+                android:id="@+id/etUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/round_edittext"
-                android:fontFamily="@font/poppins_regular"
                 android:hint="@string/inputUsernameHint"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:background="@drawable/round_edittext"
+                android:fontFamily="@font/poppins_regular" />
 
             <TextView
-                android:id="@+id/tvPassword2"
+                android:id="@+id/tvPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/poppins_regular"
-                android:text="@string/passwordTitle" />
+                android:text="@string/passwordTitle"
+                android:fontFamily="@font/poppins_regular" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/inputPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/round_edittext"
-                android:fontFamily="@font/poppins_regular"
                 android:hint="@string/inputPasswordHint"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:background="@drawable/round_edittext"
+                android:fontFamily="@font/poppins_regular" />
 
             <Button
-                android:id="@+id/loginButton"
+                android:id="@+id/btnLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_weight="1"
                 android:background="@drawable/login_round_button"
                 android:backgroundTint="@color/md_theme_onPrimary"
-                android:fontFamily="@font/poppins_regular"
                 android:text="@string/login_button_hint"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/inputPassword"
-                tools:background="@drawable/login_round_button"
-                tools:backgroundTint="@color/md_theme_onPrimary" />
+                android:fontFamily="@font/poppins_regular" />
 
             <TextView
                 android:id="@+id/tvForgetPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/poppins_regular"
                 android:text="@string/forgot_password"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                android:fontFamily="@font/poppins_regular" />
         </LinearLayout>
-
     </androidx.cardview.widget.CardView>
 
     <View
         android:id="@+id/vector_2"
         android:layout_width="532dp"
         android:layout_height="138.75dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="56dp"
         android:background="@drawable/wavy_login_mirorred"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginCard" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

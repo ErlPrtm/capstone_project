@@ -1,10 +1,9 @@
-package com.capstoneproject.aji.model
+package com.capstoneproject.aji.data.model
 
-data class DataPegawai(
-    val id_pegawai: Int,
-    val user_id: Int,
-    val nik: String,
-    val ttl: String,
+data class Pegawai(
+    val id_pegawai: Int?,
+    val NIK: String,
+    val TTL: String,
     val alamat: String,
     val jenis_kelamin: String,
     val no_wa: String,

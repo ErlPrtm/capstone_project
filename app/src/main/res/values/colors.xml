@@ -10,4 +10,19 @@
     <color name="md_theme_onPrimary">#00796B</color>
     <color name="md_theme_primaryContainer">#EBEBEB</color>
     <color name="md_theme_onPrimaryContainer">#5A5A5A</color>
+
+    <color name="teal"> #008080</color>
+    <color name="green_primary_light">#33A284</color>
+    <color name="green_primary">#007859</color>
+    <color name="green_primary_dark">#004C39</color>
+
+    <color name="green_secondary_light">#66B39E</color>
+    <color name="green_secondary">#338F73</color>
+    <color name="green_secondary_dark">#00523E</color>
+
+    <color name="neutral_black">#FF000000</color>
+    <color name="neutral_white">#FFFFFFFF</color>
+    <color name="neutral_gray_light">#F2F2F2</color>
+    <color name="neutral_gray">#CCCCCC</color>
+    <color name="neutral_gray_dark">#666666</color>
 </resources>

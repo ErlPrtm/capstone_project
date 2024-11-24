@@ -1,9 +1,22 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Aji" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+<resources>
+<!-- Tema utama aplikasi -->
+    <style name="Base.Theme.Aji" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#007859</item>
+        <item name="colorPrimaryVariant">#005F47</item>
+        <item name="colorSecondary">#00A478</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="android:statusBarColor">#005F47</item>
+        <item name="android:windowBackground">#F5F5F5</item>
+        <item name="android:navigationBarColor">#007859</item>
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="Theme.App.NoActionBar" parent="Base.Theme.Aji">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="Theme.Aji" parent="Base.Theme.Aji" />
+
 </resources>

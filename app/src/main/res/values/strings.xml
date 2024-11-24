@@ -51,4 +51,23 @@
     <string name="attendance_tableContent">08:00</string>
     <string name="checkout_tableContent">17:00</string>
     <string name="total_hours_tableContent">08:00</string>
+
+    <string name="nik">NIK</string>
+    <string name="alamat">Alamat</string>
+    <string name="save">Save</string>
+    <string name="delete_pegawai">Delete Pegawai</string>
+
+    <string name="settings">Pengaturan</string>
+    <string name="dark_mode">Mode Gelap</string>
+    <string name="change_language">Ganti Bahasa</string>
+    <string name="logout">Keluar</string>
+    <string name="english">Bahasa Inggris</string>
+    <string name="indonesian">Bahasa Indonesia</string>
+    <string name="back">Kembali</string>
+
+    <string name="settings_fragment">SettingsFragment</string>
+    <string name="logout_button_clicked">Tombol logout diklik</string>
+    <string name="dark_mode_enabled">Mode gelap diaktifkan</string>
+    <string name="dark_mode_disabled">Mode gelap dinonaktifkan</string>
+    <string name="logged_out_message">Anda telah keluar</string>
 </resources>
