@@ -1,6 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.AbsenceFragment">
+
+    <TextView
+        android:id="@+id/tvClock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/poppins_bold"
+        android:text="@string/clock_attendance"
+        android:textSize="56sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_italic"
+        android:text="@string/date_placeholder"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvClock" />
+
+    <View
+        android:id="@+id/rightTop"
+        android:layout_width="27dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/top_right_corner"
+        app:layout_constraintBottom_toTopOf="@+id/ivSelfiePreview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivSelfiePreview" />
+
+    <View
+        android:id="@+id/leftTop"
+        android:layout_width="27dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/top_left_corner"
+        app:layout_constraintBottom_toTopOf="@+id/ivSelfiePreview"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivSelfiePreview" />
+
+    <ImageView
+        android:id="@+id/ivSelfiePreview"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars"
+        android:contentDescription="@string/preview_selfie"/>
+
+    <View
+        android:id="@+id/leftBottom"
+        android:layout_width="27dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="24dp"
+        android:background="@drawable/top_left_corner"
+        android:rotation="270"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivSelfiePreview" />
+
+    <View
+        android:id="@+id/rightBottom"
+        android:layout_width="27dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/top_right_corner"
+        android:rotation="90"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivSelfiePreview" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="32dp"
+        android:drawableStart="@drawable/save_icon"
+        android:drawableEnd="@drawable/save_icon"
+        android:fontFamily="@font/poppins_regular"
+        android:padding="8dp"
+        android:text="@string/save_attendance"
+        app:cornerRadius="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivSelfiePreview" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

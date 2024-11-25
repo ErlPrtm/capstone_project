@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp"
-    tools:context=".HomeFragment">
+    tools:context=".ui.fragments.HomeFragment">
+
 
     <TextView
         android:id="@+id/tvGreetings"
@@ -16,7 +16,6 @@
         android:fontFamily="@font/italiana_regular"
         android:text="@string/greetings_placeholder"
         android:textSize="16sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,7 +28,6 @@
         android:fontFamily="@font/italiana_regular"
         android:text="@string/username_placeholder"
         android:textSize="32sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvGreetings"
         tools:layout_constraintStart_toStartOf="parent" />
@@ -39,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
         android:fontFamily="@font/poppins_regular"
         android:text="@string/date_placeholder"
         android:textSize="12sp"
@@ -70,8 +68,8 @@
             android:id="@+id/arrow"
             android:layout_width="24dp"
             android:layout_height="20dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="13dp"
             android:background="@drawable/attendance_icon" />
 
         <TextView
@@ -127,11 +125,11 @@
             android:background="@drawable/icon_circle" />
 
         <View
-            android:id="@+id/arrowUp"
+            android:id="@+id/arrowUp2"
             android:layout_width="24dp"
             android:layout_height="20dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="17dp"
             android:background="@drawable/checkout_icon" />
 
         <TextView
@@ -218,7 +216,7 @@
             android:background="@drawable/icon_circle" />
 
         <View
-            android:id="@+id/arrowUp2"
+            android:id="@+id/arrowUp"
             android:layout_width="24dp"
             android:layout_height="26dp"
             android:layout_marginStart="8dp"
@@ -299,10 +297,10 @@
 
         <View
             android:id="@+id/fileIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="10dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="14dp"
             android:background="@drawable/total_attended_icon" />
 
         <TextView
@@ -335,7 +333,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/poppins_regular"
-        android:text="@string/attendance_history_title"
+        android:text="@string/attendance_history"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -345,6 +343,7 @@
         android:id="@+id/tlAttendanceHistory"
         android:layout_width="410dp"
         android:layout_height="240dp"
+        android:contentDescription="Table Histori Kehadiran"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvAttendanceHistory">
 
@@ -355,9 +354,8 @@
             android:layout_margin="8dp">
 
             <TextView
-                android:layout_width="20dp"
                 android:layout_column="1"
-                android:layout_marginStart="0dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/poppins_regular"
                 android:padding="3dp"
@@ -367,7 +365,7 @@
 
             <TextView
                 android:layout_column="1"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/poppins_regular"
                 android:padding="3dp"
@@ -376,7 +374,7 @@
 
             <TextView
                 android:layout_column="1"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="20dp"
                 android:layout_marginEnd="8dp"
                 android:fontFamily="@font/poppins_regular"
                 android:padding="3dp"
@@ -385,66 +383,26 @@
 
             <TextView
                 android:layout_column="1"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="20dp"
                 android:fontFamily="@font/poppins_regular"
                 android:padding="3dp"
                 android:text="@string/total_hours_tableHeader"
                 android:textSize="13sp" />
         </TableRow>
 
-        <View
-            android:id="@+id/Line"
-            android:layout_width="50dp"
-            android:layout_height="1dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@color/md_theme_primaryContainer"
-            android:visibility="visible"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TableRow
-            android:id="@+id/trContentAttendanceHistory"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp">
-
-            <TextView
-                android:layout_column="1"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/poppins_regular"
-                android:padding="3dp"
-                android:text="@string/date_tableContent"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_column="1"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/poppins_regular"
-                android:padding="3dp"
-                android:text="@string/attendance_tableContent"
-                android:textAlignment="center"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_column="1"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/poppins_regular"
-                android:padding="3dp"
-                android:text="@string/checkout_tableContent"
-                android:textAlignment="center"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_column="1"
-                android:layout_marginStart="8dp"
-                android:fontFamily="@font/poppins_regular"
-                android:padding="3dp"
-                android:text="@string/total_hours_tableContent"
-                android:textAlignment="center"
-                android:textSize="15sp" />
-        </TableRow>
     </TableLayout>
+
+    <View
+        android:id="@+id/Line"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/md_theme_primaryContainer"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvAttendanceHistory" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

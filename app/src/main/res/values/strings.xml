@@ -3,8 +3,8 @@
     <string name="login">Login</string>
     <string name="usernameTitle">Username</string>
     <string name="passwordTitle">Password</string>
-    <string name="inputUsernameHint">Input your Username</string>
-    <string name="inputPasswordHint">Input your Password</string>
+    <string name="inputUsernameHint">Masukkan Username</string>
+    <string name="inputPasswordHint">Masukkan Password</string>
     <string name="login_button_hint">Login</string>
     <string name="forgot_password">Forgot Password ?</string>
 
@@ -70,9 +70,10 @@
     <string name="dark_mode_enabled">Mode gelap diaktifkan</string>
     <string name="dark_mode_disabled">Mode gelap dinonaktifkan</string>
     <string name="logged_out_message">Anda telah keluar</string>
-
-    <!--  HOME  -->
-
-    <string name="attendance_history_title">Riwayat Kehadiran</string>
-
+    <string name="bottom_navbar">Bottom Navbar</string>
+    <string name="email_username">username@gmail.com</string>
+    <string name="save_attendance">Save Attendance</string>
+    <string name="preview_selfie">Preview Selfie</string>
+    <string name="attendance_history">Attendance History</string>
+    <string name="title_analytics_fragment">Analytics For</string>
 </resources>

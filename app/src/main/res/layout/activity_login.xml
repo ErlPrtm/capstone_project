@@ -49,14 +49,24 @@
                 android:text="@string/usernameTitle"
                 android:fontFamily="@font/poppins_regular" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etUsername"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/usernameLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/inputUsernameHint"
-                android:padding="10dp"
-                android:background="@drawable/round_edittext"
-                android:fontFamily="@font/poppins_regular" />
+                android:layout_height="match_parent"
+                app:startIconDrawable="@drawable/outline_account_circle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/round_edittext"
+                    android:fontFamily="@font/poppins_regular"
+                    android:hint="@string/inputUsernameHint"
+                    android:padding="24dp"
+                    android:paddingStart="45dp"
+                    android:paddingEnd="40dp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/tvPassword"
@@ -66,14 +76,25 @@
                 android:text="@string/passwordTitle"
                 android:fontFamily="@font/poppins_regular" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputPassword"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/inputPasswordHint"
-                android:padding="10dp"
-                android:background="@drawable/round_edittext"
-                android:fontFamily="@font/poppins_regular" />
+                android:layout_height="match_parent"
+                app:endIconMode="password_toggle"
+                app:startIconDrawable="@drawable/icon_lock_password">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/round_edittext"
+                    android:fontFamily="@font/poppins_regular"
+                    android:hint="@string/inputPasswordHint"
+                    android:inputType="textPassword"
+                    android:padding="24dp"
+                    android:paddingStart="45dp"
+                    android:paddingEnd="40dp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btnLogin"

@@ -124,6 +124,9 @@ dependencies {
     // Debugging Tools
     debugImplementation(libs.androidx.fragment.testing)
 
-//  Navbar
+    // Navbar
     implementation(libs.smoothbottombar)
+
+    // Bar Chart
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }

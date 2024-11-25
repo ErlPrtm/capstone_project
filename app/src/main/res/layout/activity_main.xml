@@ -25,15 +25,16 @@
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        app:iconSize="24dp"
+        android:contentDescription="@string/bottom_navbar"
         app:backgroundColor="@color/md_theme_primary"
-        app:textColor="@color/md_theme_primary"
+        app:iconSize="24dp"
         app:iconTint="@color/md_theme_onPrimary"
         app:iconTintActive="@color/md_theme_primary"
         app:indicatorColor="@color/md_theme_onPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_menu" />
+        app:menu="@menu/bottom_menu"
+        app:textColor="@color/md_theme_primary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
