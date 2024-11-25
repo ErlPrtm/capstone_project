@@ -127,6 +127,9 @@ dependencies {
     // Navbar
     implementation(libs.smoothbottombar)
 
+    // Splash Screen
+    implementation ("androidx.core:core-splashscreen:1.0.1")
+
     // Bar Chart
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }

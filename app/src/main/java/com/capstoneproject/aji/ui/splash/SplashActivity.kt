@@ -1,9 +1,13 @@
 package com.capstoneproject.aji.ui.splash
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import com.capstoneproject.aji.R
 import com.capstoneproject.aji.data.preferences.UserPreferences
 import com.capstoneproject.aji.ui.login.LoginActivity
 import com.capstoneproject.aji.ui.main.MainActivity
@@ -13,6 +17,11 @@ import kotlinx.coroutines.launch
 class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+    //  Pasang splash screen bawaan
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            installSplashScreen()
+        }
+
         super.onCreate(savedInstanceState)
 
         val userPreferences = UserPreferences(applicationContext)
