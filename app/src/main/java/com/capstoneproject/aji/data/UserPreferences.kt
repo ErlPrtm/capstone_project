@@ -22,6 +22,8 @@ class UserPreferences(context: Context) {
         private val TOKEN_KEY = stringPreferencesKey("token")
         private val LOGGED_IN_KEY = booleanPreferencesKey("is_logged_in")
         private val DARK_MODE_KEY = booleanPreferencesKey("dark_mode")
+        private val ROLE_KEY = stringPreferencesKey("role")
+
     }
 
     suspend fun saveToken(token: String) {
@@ -87,6 +89,18 @@ class UserPreferences(context: Context) {
     suspend fun clear() {
         dataStore.edit { preferences ->
             preferences.clear()
+        }
+    }
+
+    suspend fun saveRole(role: String) {
+        dataStore.edit { preferences ->
+            preferences[ROLE_KEY] = role
+        }
+    }
+
+    fun getRole(): Flow<String?> {
+        return dataStore.data.map { preferences ->
+            preferences[ROLE_KEY]
         }
     }
 }

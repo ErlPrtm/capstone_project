@@ -34,14 +34,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Dark Mode Card -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvDaftarPegawai"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 app:cardElevation="4dp"
                 app:cardCornerRadius="8dp"
-                app:strokeColor="?attr/colorPrimary"
                 app:strokeWidth="2dp"
                 android:foreground="?attr/selectableItemBackground">
 
@@ -51,6 +50,50 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/ic_employees"
+                        android:contentDescription="@string/employee_list" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/employee_list"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textColor="?attr/colorPrimary"
+                        android:textAppearance="?attr/textAppearanceSubtitle1" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="8dp"
+                app:strokeWidth="2dp"
+                android:foreground="?attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:id="@+id/ic_dark"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="16dp"
+                        android:rotation="180"
+                        android:src="@drawable/ic_dark_light_toggle"
+                        android:contentDescription="@string/logout" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -73,9 +116,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="12dp"
-                app:strokeColor="?attr/colorPrimary"
+                app:cardElevation="4dp"
+                app:cardCornerRadius="8dp"
                 app:strokeWidth="2dp"
                 android:foreground="?attr/selectableItemBackground">
 
@@ -87,6 +129,15 @@
                     android:gravity="center_vertical"
                     android:padding="16dp">
 
+                    <ImageView
+                        android:id="@+id/action_logout"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="16dp"
+                        android:rotation="180"
+                        android:src="@drawable/ic_logout"
+                        android:contentDescription="@string/logout" />
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -96,12 +147,6 @@
                         android:textColor="?attr/colorPrimary"
                         android:fontFamily="@font/poppins_medium" />
 
-                    <ImageView
-                        android:id="@+id/action_logout"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ic_logout"
-                        android:contentDescription="@string/logout" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

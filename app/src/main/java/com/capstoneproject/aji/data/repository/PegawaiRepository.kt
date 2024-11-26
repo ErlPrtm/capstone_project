@@ -2,53 +2,29 @@ package com.capstoneproject.aji.data.repository
 
 import com.capstoneproject.aji.data.api.RetrofitInstance
 import com.capstoneproject.aji.data.model.Pegawai
+import retrofit2.Response
 
 class PegawaiRepository {
 
-    suspend fun getAllPegawai(token: String): List<Pegawai> {
-        return try {
-            val response = RetrofitInstance.api.getAllPegawai(token)
-            if (response.isSuccessful) response.body() ?: emptyList()
-            else emptyList()
-        } catch (e: Exception) {
-            emptyList()
-        }
+    private val api = RetrofitInstance.pegawai
+
+    suspend fun getAllPegawai(token: String): Response<List<Pegawai>> {
+        return api.getAllPegawai("Bearer $token")
     }
 
-    suspend fun getPegawaiById(token: String, id: Int): Pegawai? {
-        return try {
-            val response = RetrofitInstance.api.getPegawaiById(token, id)
-            if (response.isSuccessful) response.body() else null
-        } catch (e: Exception) {
-            null
-        }
+    suspend fun getPegawaiById(token: String, id: Int): Response<Pegawai> {
+        return api.getPegawaiById("Bearer $token", id)
     }
 
-    suspend fun createPegawai(token: String, pegawai: Pegawai): Pegawai? {
-        return try {
-            val response = RetrofitInstance.api.createPegawai(token, pegawai)
-            if (response.isSuccessful) response.body() else null
-        } catch (e: Exception) {
-            null
-        }
+    suspend fun createPegawai(token: String, pegawai: Pegawai): Response<Pegawai> {
+        return api.createPegawai("Bearer $token", pegawai)
     }
 
-    suspend fun updatePegawai(token: String, id: Int, pegawai: Pegawai): Pegawai? {
-        return try {
-            val response = RetrofitInstance.api.updatePegawai(token, id, pegawai)
-            if (response.isSuccessful) response.body() else null
-        } catch (e: Exception) {
-            null
-        }
+    suspend fun updatePegawai(token: String, id: Int, pegawai: Pegawai): Response<Pegawai> {
+        return api.updatePegawai("Bearer $token", id, pegawai)
     }
 
-    suspend fun deletePegawai(token: String, id: Int): Boolean {
-        return try {
-            val response = RetrofitInstance.api.deletePegawai(token, id)
-            response.isSuccessful
-        } catch (e: Exception) {
-            false
-        }
+    suspend fun deletePegawai(token: String, id: Int): Response<Unit> {
+        return api.deletePegawai("Bearer $token", id)
     }
 }
-

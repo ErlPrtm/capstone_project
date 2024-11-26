@@ -14,6 +14,8 @@ data class LoginData(
 data class User(
     val id: Int,
     val username: String,
+    val fullname: String,
+    val email: String,
     val role: String,
     val posisi: String
 )

@@ -20,4 +20,11 @@ object RetrofitInstance {
             .build()
             .create(ApiService::class.java)
     }
+    val pegawai: PegawaiApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(PegawaiApiService::class.java)
+    }
 }

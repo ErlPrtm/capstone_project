@@ -77,4 +77,5 @@
     <string name="attendance_history">Attendance History</string>
     <string name="title_analytics_fragment">Analytics For</string>
     <string name="branding">Bersama aji, Gaji aman terkendali</string>
+    <string name="employee_list">Daftar Pegawai</string>
 </resources>

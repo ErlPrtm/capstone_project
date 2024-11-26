@@ -2,17 +2,14 @@ package com.capstoneproject.aji.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.capstoneproject.aji.data.preferences.UserPreferences
 import com.capstoneproject.aji.databinding.FragmentHomeBinding
 import com.capstoneproject.aji.ui.login.LoginActivity
-import com.capstoneproject.aji.ui.main.PegawaiViewModel
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -22,10 +19,7 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: PegawaiViewModel
     private lateinit var userPreferences: UserPreferences
-    private lateinit var handler: Handler
-    private lateinit var greetingRunnable: Runnable
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +27,6 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         userPreferences = UserPreferences(requireContext())
-        viewModel = ViewModelProvider(this).get(PegawaiViewModel::class.java)
 
         checkAuthenticationAndLoadData()
         setDateToday()
@@ -49,7 +42,6 @@ class HomeFragment : Fragment() {
                 if (!token.isNullOrEmpty()) {
                     val username = extractUsernameFromToken(token)
                     binding.tvUsername.text = username ?: "Pengguna"
-                    viewModel.getAllPegawai("Bearer $token")
                 } else {
                     redirectToLogin()
                 }
@@ -71,14 +63,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun startRealTimeGreetingUpdate() {
-        handler = Handler()
-        greetingRunnable = object : Runnable {
-            override fun run() {
+        lifecycleScope.launch {
+            while (true) {
                 setGreetings()
-                handler.postDelayed(this, 60 * 1000)
+                kotlinx.coroutines.delay(60 * 1000)
             }
         }
-        handler.post(greetingRunnable)
     }
 
     private fun redirectToLogin() {
@@ -112,7 +102,6 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        handler.removeCallbacks(greetingRunnable)
         _binding = null
     }
 }

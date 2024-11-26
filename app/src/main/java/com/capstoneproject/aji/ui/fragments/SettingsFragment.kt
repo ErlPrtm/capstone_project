@@ -10,6 +10,7 @@ import com.capstoneproject.aji.R
 import com.capstoneproject.aji.data.preferences.UserPreferences
 import com.capstoneproject.aji.databinding.FragmentSettingsBinding
 import com.capstoneproject.aji.ui.login.LoginActivity
+import com.capstoneproject.aji.ui.pegawai.PegawaiActivity
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -33,8 +34,12 @@ class SettingsFragment : Fragment() {
 
     private fun setupInitialStates() {
         lifecycleScope.launch {
-            userPreferences.isDarkModeEnabled().collect { isDarkModeEnabled ->
-                binding.switchDarkMode.isChecked = isDarkModeEnabled
+            userPreferences.getRole().collect { role ->
+                if (role == "1") {
+                    binding.cvDaftarPegawai.visibility = android.view.View.VISIBLE
+                } else {
+                    binding.cvDaftarPegawai.visibility = android.view.View.GONE
+                }
             }
         }
     }
@@ -51,6 +56,11 @@ class SettingsFragment : Fragment() {
                     Toast.makeText(requireContext(), getString(R.string.dark_mode_disabled), Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+
+        binding.cvDaftarPegawai.setOnClickListener {
+            val intent = Intent(requireContext(), PegawaiActivity::class.java)
+            startActivity(intent)
         }
 
         binding.ivLogout.setOnClickListener {
