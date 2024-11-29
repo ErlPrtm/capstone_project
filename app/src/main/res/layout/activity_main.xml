@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity" >
+    tools:context=".ui.main.MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPegawai"
@@ -35,6 +35,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_menu"
+        app:textSize="11sp"
         app:textColor="@color/md_theme_primary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

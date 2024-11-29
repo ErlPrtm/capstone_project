@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.androidx.room.paging)
     implementation(libs.androidx.room.runtime)
     implementation(libs.espresso.idling.resource)
+    implementation(libs.androidx.activity)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
@@ -132,4 +133,10 @@ dependencies {
 
     // Bar Chart
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    // CameraX
+    implementation("androidx.camera:camera-camera2:1.2.3")
+    implementation("androidx.camera:camera-lifecycle:1.2.3")
+    implementation("androidx.camera:camera-view:1.2.3")
+
 }

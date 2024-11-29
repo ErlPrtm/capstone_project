@@ -78,4 +78,7 @@
     <string name="title_analytics_fragment">Analytics For</string>
     <string name="branding">Bersama aji, Gaji aman terkendali</string>
     <string name="employee_list">Daftar Pegawai</string>
+    <string name="camera_button_placeholder">Go to Camera</string>
+    <string name="button_rotate_camera">Rotasi kamera</string>
+    <string name="button_capture">Ambil swafoto</string>
 </resources>

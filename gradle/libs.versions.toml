@@ -59,6 +59,7 @@ swiperefreshlayoutVersion = "1.1.0"
 playServicesMaps = "19.0.0"
 espressoIdlingResource = "3.5.1"
 smoothbottombar = "1.7.9"
+activityVersion = "1.9.3"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -99,6 +100,7 @@ play-services-maps = { group = "com.google.android.gms", name = "play-services-m
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofitVersion" }
 espresso-idling-resource = { group = "androidx.test.espresso", name = "espresso-idling-resource", version.ref = "espressoIdlingResource" }
 smoothbottombar = { module = "com.github.ibrahimsn98:SmoothBottomBar", version.ref = "smoothbottombar" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activityVersion" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
