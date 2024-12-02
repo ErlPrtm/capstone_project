@@ -2,10 +2,12 @@ package com.capstoneproject.aji.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.capstoneproject.aji.data.api.RetrofitInstance
+import com.capstoneproject.aji.data.model.LoginRequest
 import com.capstoneproject.aji.data.model.LoginResponse
 import com.capstoneproject.aji.data.preferences.UserPreferences
 import com.capstoneproject.aji.databinding.ActivityLoginBinding
@@ -39,7 +41,13 @@ class LoginActivity : AppCompatActivity() {
     private fun performLogin(username: String, password: String) {
         lifecycleScope.launch {
             try {
-                val response = RetrofitInstance.api.login(username, password)
+                val requestBody = LoginRequest(username, password)
+
+                val response = RetrofitInstance.api.login(requestBody)
+
+                Log.d("Perform Login", "Request: $username, $password")
+                Log.d("Perform Login", "Response: ${response.message()}")
+
                 if (response.isSuccessful) {
                     val loginResponse: LoginResponse? = response.body()
                     val token = loginResponse?.data?.token
@@ -49,12 +57,13 @@ class LoginActivity : AppCompatActivity() {
                         userPreferences.saveToken(token)
                         userPreferences.setLoggedIn(true)
                         userPreferences.saveRole(role)
+
                         navigateToMain()
                     } else {
                         Toast.makeText(this@LoginActivity, "Token atau role tidak ditemukan", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this@LoginActivity, "Login gagal: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, "Gagal gagal: ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 Toast.makeText(this@LoginActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()

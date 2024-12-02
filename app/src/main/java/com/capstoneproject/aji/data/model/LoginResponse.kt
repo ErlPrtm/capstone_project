@@ -1,9 +1,14 @@
 package com.capstoneproject.aji.data.model
 
+data class LoginRequest(
+    val username: String,
+    val password: String
+)
+
 data class LoginResponse(
     val status: String,
     val message: String,
-    val data: LoginData
+    val data: LoginData? = null
 )
 
 data class LoginData(

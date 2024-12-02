@@ -1,16 +1,15 @@
 package com.capstoneproject.aji.data.api
 
+import com.capstoneproject.aji.data.model.LoginRequest
 import com.capstoneproject.aji.data.model.LoginResponse
 import com.capstoneproject.aji.data.model.Pegawai
 import retrofit2.Response
 import retrofit2.http.*
 
 interface ApiService {
-    @FormUrlEncoded
     @POST("api/users/login")
     suspend fun login(
-        @Field("username") username: String,
-        @Field("password") password: String
+        @Body requestBody: LoginRequest
     ): Response<LoginResponse>
 
     @GET("api/data_pegawai")
