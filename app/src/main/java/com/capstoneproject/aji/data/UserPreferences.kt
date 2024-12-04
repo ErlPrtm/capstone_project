@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +24,7 @@ class UserPreferences(context: Context) {
         private val LOGGED_IN_KEY = booleanPreferencesKey("is_logged_in")
         private val DARK_MODE_KEY = booleanPreferencesKey("dark_mode")
         private val ROLE_KEY = stringPreferencesKey("role")
-
+        private val USER_ID_KEY  = intPreferencesKey("user_id")
     }
 
     suspend fun saveToken(token: String) {
@@ -43,6 +44,26 @@ class UserPreferences(context: Context) {
             }
             .map { preferences ->
                 preferences[TOKEN_KEY]
+            }
+    }
+
+    suspend fun saveUserId(userId: Int) {
+        dataStore.edit { preferences ->
+            preferences[USER_ID_KEY] = userId
+        }
+    }
+
+    fun getUserId(): Flow<Int?> {
+        return dataStore.data
+            .catch { exception ->
+                if(exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { preferences ->
+                preferences[USER_ID_KEY]
             }
     }
 

@@ -1,8 +1,11 @@
 package com.capstoneproject.aji.data.api
 
+import com.capstoneproject.aji.data.model.AttendanceResponse
 import com.capstoneproject.aji.data.model.LoginRequest
 import com.capstoneproject.aji.data.model.LoginResponse
 import com.capstoneproject.aji.data.model.Pegawai
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -11,6 +14,14 @@ interface ApiService {
     suspend fun login(
         @Body requestBody: LoginRequest
     ): Response<LoginResponse>
+
+    @Multipart
+    @POST("api/log_kehadiran/absen")
+    suspend fun absen(
+        @Header("Authorization") token: String,
+        @Part("user_id") userId: RequestBody,
+        @Part foto: MultipartBody.Part
+    ): Response<AttendanceResponse>
 
     @GET("api/data_pegawai")
     suspend fun getAllPegawai(

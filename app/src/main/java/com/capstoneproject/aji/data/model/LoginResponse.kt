@@ -1,5 +1,7 @@
 package com.capstoneproject.aji.data.model
 
+import com.google.gson.annotations.SerializedName
+
 data class LoginRequest(
     val username: String,
     val password: String
@@ -17,10 +19,10 @@ data class LoginData(
 )
 
 data class User(
-    val id: Int,
+    val user_id: Int,
     val username: String,
-    val fullname: String,
     val email: String,
+    val fullname: String,
     val role: String,
     val posisi: String
 )

@@ -52,18 +52,22 @@ class LoginActivity : AppCompatActivity() {
                     val loginResponse: LoginResponse? = response.body()
                     val token = loginResponse?.data?.token
                     val role = loginResponse?.data?.user?.role
+                    val user = loginResponse?.data?.user
 
                     if (token != null && role != null) {
+                        val userId = user?.user_id
                         userPreferences.saveToken(token)
                         userPreferences.setLoggedIn(true)
                         userPreferences.saveRole(role)
+                        userPreferences.saveUserId(userId!!)
+                        Log.d("performLogin", "User Id: $userId")
 
                         navigateToMain()
                     } else {
                         Toast.makeText(this@LoginActivity, "Token atau role tidak ditemukan", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(this@LoginActivity, "Gagal gagal: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, "Login gagal: ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 Toast.makeText(this@LoginActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
