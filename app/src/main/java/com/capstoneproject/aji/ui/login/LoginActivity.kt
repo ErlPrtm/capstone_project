@@ -3,6 +3,7 @@ package com.capstoneproject.aji.ui.login
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -31,10 +32,12 @@ class LoginActivity : AppCompatActivity() {
             val username = binding.etUsername.text.toString().trim()
             val password = binding.inputPassword.text.toString().trim()
 
+
             if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Harap isi semua kolom", Toast.LENGTH_SHORT).show()
             } else {
                 performLogin(username, password)
+                showLoading(true)
             }
         }
     }
@@ -43,7 +46,6 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val requestBody = LoginRequest(username, password)
-
                 val response = RetrofitInstance.api.login(requestBody)
 
                 Log.d("Perform Login", "Request: $username, $password")
@@ -72,6 +74,8 @@ class LoginActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 Toast.makeText(this@LoginActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            } finally {
+                showLoading(false)
             }
         }
     }
@@ -92,7 +96,13 @@ class LoginActivity : AppCompatActivity() {
     private fun navigateToMain() {
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        binding.progressBarLogin.visibility = View.GONE
         startActivity(intent)
         finish()
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        Log.d("LoginActivity", "showLoading called with : $isLoading")
+        binding.progressBarLogin.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }

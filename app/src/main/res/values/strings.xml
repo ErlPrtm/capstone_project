@@ -82,4 +82,5 @@
     <string name="button_rotate_camera">Rotasi kamera</string>
     <string name="button_capture">Ambil swafoto</string>
     <string name="table_histori_kehadiran">Table Histori Kehadiran</string>
+    <string name="scroll_analytics">Scroll analytics</string>
 </resources>
