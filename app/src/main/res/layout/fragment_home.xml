@@ -331,78 +331,93 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins_regular"
         android:text="@string/attendance_history"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cvAbsent" />
+        app:layout_constraintTop_toBottomOf="@id/cvTotalAttended" />
 
-    <TableLayout
-        android:id="@+id/tlAttendanceHistory"
-        android:layout_width="410dp"
-        android:layout_height="240dp"
-        android:contentDescription="Table Histori Kehadiran"
+    <LinearLayout
+        android:id="@+id/TableHeader"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvAttendanceHistory">
 
-        <TableRow
-            android:id="@+id/trHeaderAttendanceHistory"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="8dp">
+        <TextView
+            android:id="@+id/tvHeaderDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:text="@string/date_tableHeader"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_column="1"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/poppins_regular"
-                android:padding="3dp"
-                android:text="@string/date_tableHeader"
-                android:textAlignment="center"
-                android:textSize="13sp" />
+        <TextView
+            android:id="@+id/tvHeaderAttendance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:text="@string/attendance_tableHeader"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_column="1"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/poppins_regular"
-                android:padding="3dp"
-                android:text="@string/attendance_tableHeader"
-                android:textSize="13sp" />
+        <TextView
+            android:id="@+id/tvHeaderCheckout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:text="@string/checkout_tableHeader"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_column="1"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/poppins_regular"
-                android:padding="3dp"
-                android:text="@string/checkout_tableHeader"
-                android:textSize="13sp" />
-
-            <TextView
-                android:layout_column="1"
-                android:layout_marginStart="20dp"
-                android:fontFamily="@font/poppins_regular"
-                android:padding="3dp"
-                android:text="@string/total_hours_tableHeader"
-                android:textSize="13sp" />
-        </TableRow>
-
-    </TableLayout>
+        <TextView
+            android:id="@+id/tvHeaderTotalHours"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:text="@string/total_hours_tableHeader"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <View
         android:id="@+id/Line"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
         android:background="@color/md_theme_primaryContainer"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvAttendanceHistory" />
+        app:layout_constraintTop_toBottomOf="@id/TableHeader" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Line">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAttendanceHistory"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
