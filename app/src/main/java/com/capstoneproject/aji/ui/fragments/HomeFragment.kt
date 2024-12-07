@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.capstoneproject.aji.data.preferences.UserPreferences
+import com.capstoneproject.aji.data.UserPreferences
 import com.capstoneproject.aji.databinding.FragmentHomeBinding
 import com.capstoneproject.aji.ui.login.LoginActivity
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -19,14 +19,14 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var userPreferences: UserPreferences
+    private lateinit var preferenceHelper: UserPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        userPreferences = UserPreferences(requireContext())
+        preferenceHelper = UserPreferences(requireContext())
 
         checkAuthenticationAndLoadData()
         setDateToday()
@@ -38,13 +38,12 @@ class HomeFragment : Fragment() {
 
     private fun checkAuthenticationAndLoadData() {
         lifecycleScope.launch {
-            userPreferences.getToken().collect { token ->
-                if (!token.isNullOrEmpty()) {
-                    val username = extractUsernameFromToken(token)
-                    binding.tvUsername.text = username ?: "Pengguna"
-                } else {
-                    redirectToLogin()
-                }
+            val isLoggedIn = preferenceHelper.isLoggedIn().first()
+            if (isLoggedIn) {
+                val fullname = preferenceHelper.getUserDetail("fullname").first() ?: "Pengguna"
+                binding.tvUsername.text = fullname
+            } else {
+                redirectToLogin()
             }
         }
     }
@@ -71,13 +70,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun redirectToLogin() {
-        val intent = Intent(requireContext(), LoginActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        requireActivity().finish()
-    }
-
     private fun setDateToday() {
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("EEEE, dd MMMM yyyy", Locale("id", "ID"))
@@ -85,19 +77,11 @@ class HomeFragment : Fragment() {
         binding.tvDate.text = dateToday
     }
 
-    private fun extractUsernameFromToken(token: String): String? {
-        return try {
-            val parts = token.split(".")
-            if (parts.size == 3) {
-                val payload = String(android.util.Base64.decode(parts[1], android.util.Base64.DEFAULT))
-                val json = JSONObject(payload)
-                json.optString("username", "Pengguna")
-            } else {
-                null
-            }
-        } catch (e: Exception) {
-            null
-        }
+    private fun redirectToLogin() {
+        val intent = Intent(requireContext(), LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        requireActivity().finish()
     }
 
     override fun onDestroyView() {

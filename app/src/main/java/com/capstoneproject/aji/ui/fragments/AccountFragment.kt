@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.capstoneproject.aji.data.preferences.UserPreferences
+import com.capstoneproject.aji.data.UserPreferences
 import com.capstoneproject.aji.databinding.FragmentAccountBinding
 import com.capstoneproject.aji.ui.login.LoginActivity
 import kotlinx.coroutines.launch

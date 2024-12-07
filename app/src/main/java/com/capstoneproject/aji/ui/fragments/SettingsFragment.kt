@@ -2,16 +2,16 @@ package com.capstoneproject.aji.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.capstoneproject.aji.R
-import com.capstoneproject.aji.data.preferences.UserPreferences
+import com.capstoneproject.aji.data.UserPreferences
 import com.capstoneproject.aji.databinding.FragmentSettingsBinding
 import com.capstoneproject.aji.ui.login.LoginActivity
 import com.capstoneproject.aji.ui.pegawai.PegawaiActivity
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class SettingsFragment : Fragment() {
@@ -36,9 +36,9 @@ class SettingsFragment : Fragment() {
         lifecycleScope.launch {
             userPreferences.getRole().collect { role ->
                 if (role == "1") {
-                    binding.cvDaftarPegawai.visibility = android.view.View.VISIBLE
+                    binding.cvDaftarPegawai.visibility = View.VISIBLE
                 } else {
-                    binding.cvDaftarPegawai.visibility = android.view.View.GONE
+                    binding.cvDaftarPegawai.visibility = View.GONE
                 }
             }
         }

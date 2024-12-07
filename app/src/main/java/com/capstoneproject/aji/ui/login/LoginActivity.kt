@@ -9,7 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import com.capstoneproject.aji.data.api.RetrofitInstance
 import com.capstoneproject.aji.data.model.LoginRequest
 import com.capstoneproject.aji.data.model.LoginResponse
-import com.capstoneproject.aji.data.preferences.UserPreferences
+import com.capstoneproject.aji.data.UserPreferences
+import com.capstoneproject.aji.data.model.User
 import com.capstoneproject.aji.databinding.ActivityLoginBinding
 import com.capstoneproject.aji.ui.main.MainActivity
 import kotlinx.coroutines.launch
@@ -61,7 +62,7 @@ class LoginActivity : AppCompatActivity() {
                         userPreferences.saveRole(role)
                         userPreferences.saveUserId(userId!!)
                         Log.d("performLogin", "User Id: $userId")
-
+                        saveUserData(token, user)
                         navigateToMain()
                     } else {
                         Toast.makeText(this@LoginActivity, "Token atau role tidak ditemukan", Toast.LENGTH_SHORT).show()
@@ -73,6 +74,19 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this@LoginActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private suspend fun saveUserData(token: String, user: User) {
+        val userDetails = mapOf(
+            "user_id" to user.user_id.toString(),
+            "username" to user.username,
+            "fullname" to user.fullname,
+            "email" to user.email,
+            "role" to user.role.toString(),
+            "posisi" to user.posisi
+        )
+        userPreferences.saveToken(token)
+        userPreferences.saveUserDetailsFromResponse(userDetails)
     }
 
     private fun navigateToMain() {

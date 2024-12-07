@@ -1,12 +1,7 @@
-package com.capstoneproject.aji.data.preferences
+package com.capstoneproject.aji.data
 
 import android.content.Context
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -24,7 +19,8 @@ class UserPreferences(context: Context) {
         private val LOGGED_IN_KEY = booleanPreferencesKey("is_logged_in")
         private val DARK_MODE_KEY = booleanPreferencesKey("dark_mode")
         private val ROLE_KEY = stringPreferencesKey("role")
-        private val USER_ID_KEY  = intPreferencesKey("user_id")
+        private val USER_ID_KEY = intPreferencesKey("user_id")
+        private val USER_DETAILS_PREFIX = "user_detail_"
     }
 
     suspend fun saveToken(token: String) {
@@ -35,16 +31,8 @@ class UserPreferences(context: Context) {
 
     fun getToken(): Flow<String?> {
         return dataStore.data
-            .catch { exception ->
-                if (exception is IOException) {
-                    emit(emptyPreferences())
-                } else {
-                    throw exception
-                }
-            }
-            .map { preferences ->
-                preferences[TOKEN_KEY]
-            }
+            .catchException()
+            .map { preferences -> preferences[TOKEN_KEY] }
     }
 
     suspend fun saveUserId(userId: Int) {
@@ -55,16 +43,8 @@ class UserPreferences(context: Context) {
 
     fun getUserId(): Flow<Int?> {
         return dataStore.data
-            .catch { exception ->
-                if(exception is IOException) {
-                    emit(emptyPreferences())
-                } else {
-                    throw exception
-                }
-            }
-            .map { preferences ->
-                preferences[USER_ID_KEY]
-            }
+            .catchException()
+            .map { preferences -> preferences[USER_ID_KEY] }
     }
 
     suspend fun setLoggedIn(isLoggedIn: Boolean) {
@@ -75,16 +55,8 @@ class UserPreferences(context: Context) {
 
     fun isLoggedIn(): Flow<Boolean> {
         return dataStore.data
-            .catch { exception ->
-                if (exception is IOException) {
-                    emit(emptyPreferences())
-                } else {
-                    throw exception
-                }
-            }
-            .map { preferences ->
-                preferences[LOGGED_IN_KEY] ?: false
-            }
+            .catchException()
+            .map { preferences -> preferences[LOGGED_IN_KEY] ?: false }
     }
 
     suspend fun setDarkModeEnabled(isEnabled: Boolean) {
@@ -95,22 +67,8 @@ class UserPreferences(context: Context) {
 
     fun isDarkModeEnabled(): Flow<Boolean> {
         return dataStore.data
-            .catch { exception ->
-                if (exception is IOException) {
-                    emit(emptyPreferences())
-                } else {
-                    throw exception
-                }
-            }
-            .map { preferences ->
-                preferences[DARK_MODE_KEY] ?: false
-            }
-    }
-
-    suspend fun clear() {
-        dataStore.edit { preferences ->
-            preferences.clear()
-        }
+            .catchException()
+            .map { preferences -> preferences[DARK_MODE_KEY] ?: false }
     }
 
     suspend fun saveRole(role: String) {
@@ -120,8 +78,39 @@ class UserPreferences(context: Context) {
     }
 
     fun getRole(): Flow<String?> {
-        return dataStore.data.map { preferences ->
-            preferences[ROLE_KEY]
+        return dataStore.data
+            .catchException()
+            .map { preferences -> preferences[ROLE_KEY] }
+    }
+
+    suspend fun saveUserDetailsFromResponse(user: Map<String, String>) {
+        dataStore.edit { preferences ->
+            user.forEach { (key, value) ->
+                preferences[stringPreferencesKey(key)] = value
+            }
         }
     }
+
+    fun getUserDetail(key: String): Flow<String?> {
+        return dataStore.data
+            .catchException()
+            .map { preferences -> preferences[stringPreferencesKey(key)] }
+    }
+
+    suspend fun clear() {
+        dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
+
+    private fun <T> Flow<T>.catchException(): Flow<T> {
+        return this.catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences() as T)
+            } else {
+                throw exception
+            }
+        }
+    }
+
 }

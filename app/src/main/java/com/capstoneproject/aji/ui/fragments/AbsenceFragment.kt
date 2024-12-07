@@ -16,14 +16,13 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.capstoneproject.aji.data.preferences.UserPreferences
+import com.capstoneproject.aji.data.UserPreferences
 import com.capstoneproject.aji.data.repository.AuthRepository
 import com.capstoneproject.aji.databinding.FragmentAbsenceBinding
 import com.capstoneproject.aji.ui.attendance.AttendanceViewModel
 import com.capstoneproject.aji.ui.attendance.AttendanceViewModelFactory
 import com.capstoneproject.aji.ui.camera.CameraActivity
 import com.capstoneproject.aji.ui.camera.CameraActivity.Companion.CAMERAX_RESULT
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import java.io.File
@@ -32,6 +31,7 @@ import java.util.Calendar
 import java.util.Locale
 
 class AbsenceFragment : Fragment() {
+
     private var _binding: FragmentAbsenceBinding? = null
     private val binding get() = _binding!!
 
@@ -40,13 +40,11 @@ class AbsenceFragment : Fragment() {
     private lateinit var userPreferences: UserPreferences
 
     private val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if(isGranted) {
-                showToast("permission request granted")
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                showToast("Permission granted")
             } else {
-                showToast("Permission request denied")
+                showToast("Permission denied. Please enable camera permissions from settings.")
             }
         }
 
@@ -59,11 +57,11 @@ class AbsenceFragment : Fragment() {
     private val launcherIntentGallery = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri ->
-        if(uri != null) {
+        if (uri != null) {
             currentImageUri = uri
             showImage()
         } else {
-            showToast("Gagal memilih gambar dari galery")
+            showToast("Failed to select image from gallery.")
         }
     }
 
@@ -81,14 +79,15 @@ class AbsenceFragment : Fragment() {
 
         userPreferences = UserPreferences(requireContext())
 
-        if(!allPermissionGranted()) {
+        if (!allPermissionGranted()) {
             requestPermissionLauncher.launch(REQUIRED_PERMISSION)
         }
 
-        binding.btnCamera.setOnClickListener{ startCameraX() }
-        binding.btnSave.setOnClickListener{ saveAttendance() }
-        binding.btnGallery.setOnClickListener{ openGallery() }
+        binding.btnCamera.setOnClickListener { startCameraX() }
+        binding.btnSave.setOnClickListener { saveAttendance() }
+        binding.btnGallery.setOnClickListener { openGallery() }
         setDateToday()
+        updateClock()
 
         return binding.root
     }
@@ -98,6 +97,18 @@ class AbsenceFragment : Fragment() {
         val dateFormat = SimpleDateFormat("EEEE, dd MMMM yyyy", Locale("id", "ID"))
         val dateToday = dateFormat.format(calendar.time)
         binding.tvDate.text = dateToday
+    }
+
+    private fun updateClock() {
+        lifecycleScope.launch {
+            while (true) {
+                val currentTime = Calendar.getInstance().time
+                val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+                val formattedTime = timeFormat.format(currentTime)
+                binding.tvClock.text = formattedTime
+                kotlinx.coroutines.delay(1000)
+            }
+        }
     }
 
     private fun startCameraX() {
@@ -110,11 +121,11 @@ class AbsenceFragment : Fragment() {
     ) { result ->
         if (result.resultCode == CAMERAX_RESULT) {
             val imageUri = result.data?.getStringExtra(CameraActivity.EXTRA_CAMERAX_IMAGE)?.toUri()
-            if(imageUri != null) {
+            if (imageUri != null) {
                 currentImageUri = imageUri
                 showImage()
             } else {
-                showToast("Failed to capture image")
+                showToast("Failed to capture image.")
             }
         }
     }
@@ -136,22 +147,22 @@ class AbsenceFragment : Fragment() {
                 val userId = userPreferences.getUserId().firstOrNull().toString()
                 val token = userPreferences.getToken().firstOrNull()
 
-                Log.d("SaveAttendance", "Save Dimulai untuk User Id: $userId, Token : $token")
+                Log.d("SaveAttendance", "Save dimulai untuk Id: $userId, Token: $token")
 
                 if (userId == null || token == null) {
-                    showToast("User ID atau token tidak ditemukan")
-                    Log.d("SaveAttendance", "Validasi gagal.\n UserId : $userId, \n Token: $token")
+                    showToast("User ID or token not found.")
+                    Log.d("SaveAttendance", "Validasi gagal. UserId: $userId, Token: $token")
                     return@launch
                 }
 
-                if(currentImageUri == null) {
-                    showToast("Foto belum ada broo, ambil dulu")
+                if (currentImageUri == null) {
+                    showToast("No photo taken. Please take a photo first.")
                     return@launch
                 }
 
                 val file = convertUriToFile(currentImageUri!!)
-                if(!file.exists()) {
-                    showToast("File foto tidak ditemukan")
+                if (!file.exists()) {
+                    showToast("Photo file not found.")
                     return@launch
                 }
 
@@ -160,21 +171,22 @@ class AbsenceFragment : Fragment() {
                     userId = userId,
                     fotoFile = file,
                     onSuccess = { response ->
-                        showToast("Absensi berhasil: ${response.message}")
-                        Log.d("saveAttendance", "${response.message}")
+                        showToast("Attendance success: ${response.message}")
+                        Log.d("SaveAttendance", "Success: ${response.message}")
                     },
                     onError = { error ->
-                        showToast("Absensi gagal euy: $error")
-                        Log.d("saveAttendance", "Absen gagal karena $error")
+                        showToast("Absensi Gagal Euy : $error")
+                        Log.d("SaveAttendance", "Error: $error")
                     }
                 )
             } catch (e: Exception) {
                 showToast("Error: ${e.message}")
+                Log.d("SaveAttendance", "Exception: ${e.message}")
             }
         }
     }
-    
-    private fun convertUriToFile(uri: Uri) : File {
+
+    private fun convertUriToFile(uri: Uri): File {
         val contentResolver = requireContext().contentResolver
         val tempFile = File(requireContext().cacheDir, "temp_image.jpg")
         tempFile.outputStream().use { outputStream ->
@@ -187,6 +199,11 @@ class AbsenceFragment : Fragment() {
 
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

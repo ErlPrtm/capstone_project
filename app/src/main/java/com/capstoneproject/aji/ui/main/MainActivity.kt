@@ -6,11 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.capstoneproject.aji.R
-import com.capstoneproject.aji.data.preferences.UserPreferences
+import com.capstoneproject.aji.data.UserPreferences
 import com.capstoneproject.aji.databinding.ActivityMainBinding
 import com.capstoneproject.aji.ui.fragments.*
 import com.capstoneproject.aji.ui.login.LoginActivity
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
