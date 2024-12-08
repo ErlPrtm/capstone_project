@@ -98,6 +98,8 @@ dependencies {
     // Maps
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
+    implementation(libs.kotlinx.coroutines.play.services)
+
 
     // Testing - Unit Tests
     testImplementation(libs.junit)

@@ -26,6 +26,7 @@ espressoCore = "3.6.1"
 appcompat = "1.7.0"
 kotlinxCoroutinesAndroid = "1.7.3"
 kotlinxCoroutinesAndroidVersion = "1.9.0"
+kotlinxCoroutinesPlayServices = "1.7.3"
 kotlinxCoroutinesTest = "1.9.0"
 lifecycleLivedataKtxVersion = "2.8.7"
 lifecycleViewmodelKtx = "2.8.5"
@@ -89,6 +90,7 @@ converter-moshi = { module = "com.squareup.retrofit2:converter-moshi", version.r
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glideVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroidVersion" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "kotlinxCoroutinesPlayServices" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptorVersion" }
 material = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }

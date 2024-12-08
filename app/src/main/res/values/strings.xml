@@ -7,8 +7,10 @@
     <string name="inputPasswordHint">Masukkan Password</string>
     <string name="login_button_hint">Login</string>
     <string name="forgot_password">Forgot Password ?</string>
+    <string name="summary_account">Ini rekap absensi kamu bulan ini</string>
+    <string name="nipHint">123456789</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="bottom_nav_home">Home</string>
     <string name="bottom_nav_analytics">Analytics</string>
