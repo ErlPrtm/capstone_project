@@ -1,4 +1,4 @@
-package com.capstoneproject.aji.ui.attendance
+package com.capstoneproject.aji.viewmodel.attendance
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

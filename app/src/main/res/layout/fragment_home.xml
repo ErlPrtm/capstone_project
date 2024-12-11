@@ -293,7 +293,6 @@
                             android:layout_marginStart="6dp"
                             android:layout_marginTop="64dp"
                             android:fontFamily="@font/poppins_regular"
-                            android:text="@string/days_total_attended"
                             android:textSize="32sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
