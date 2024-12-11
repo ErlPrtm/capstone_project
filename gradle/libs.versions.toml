@@ -11,6 +11,7 @@ compressorVersion = "3.0.1"
 constraintlayoutVersion = "2.2.0"
 converterGson = "2.11.0"
 converterMoshi = "2.9.0"
+coreSplashscreen = "1.0.1"
 coreTesting = "2.2.0"
 datastorePreferences = "1.1.1"
 datastorePreferencesVersion = "1.1.1"
@@ -71,6 +72,7 @@ androidx-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", versi
 androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCore" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayoutVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferencesVersion" }
 androidx-fragment-testing = { module = "androidx.fragment:fragment-testing", version.ref = "fragmentTesting" }

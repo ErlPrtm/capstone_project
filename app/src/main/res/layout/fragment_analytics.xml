@@ -104,7 +104,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Fee" />
+                            android:text="@string/fee" />
 
                         <TextView
                             android:id="@+id/tvFeeMoney"
@@ -113,7 +113,7 @@
                             android:layout_gravity="end"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:text="Fee" />
+                            android:text="@string/fee" />
                     </TableRow>
 
                     <TableRow
@@ -129,7 +129,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Late" />
+                            android:text="@string/late" />
 
                         <TextView
                             android:id="@+id/tvCut"
@@ -138,7 +138,7 @@
                             android:layout_gravity="end"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:text="Potongan" />
+                            android:text="@string/potongan" />
                     </TableRow>
 
                     <TableRow
@@ -163,7 +163,7 @@
                             android:layout_gravity="end"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:text="Potongan" />
+                            android:text="@string/potongan" />
                     </TableRow>
 
                     <TableRow
@@ -179,7 +179,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Overtime" />
+                            android:text="@string/overtime" />
 
                         <TextView
                             android:id="@+id/tvCut3"
@@ -188,7 +188,7 @@
                             android:layout_gravity="end"
                             android:layout_weight="1"
                             android:gravity="end"
-                            android:text="Cut" />
+                            android:text="@string/potongan" />
                     </TableRow>
 
                     <TableRow
@@ -202,7 +202,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Accumulated Fee" />
+                            android:text="@string/accumulated_fee" />
 
                         <TextView
                             android:id="@+id/tvCut4"
@@ -210,7 +210,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:gravity="end"
-                            android:text="Akumulasi Gaji"
+                            android:text="@string/accumulated_fee"
                             android:layout_weight="1" />
                     </TableRow>
                 </TableLayout>

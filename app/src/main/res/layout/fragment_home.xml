@@ -63,7 +63,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="@string/date_placeholder"
                     android:textSize="12sp"
                     android:textStyle="italic"
                     app:layout_constraintStart_toStartOf="parent"
@@ -116,7 +115,6 @@
                         android:layout_marginStart="40dp"
                         android:layout_marginTop="30dp"
                         android:fontFamily="@font/poppins_regular"
-                        android:text="@string/attendance_info"
                         android:textSize="11sp" />
 
                     <TextView
@@ -126,7 +124,6 @@
                         android:layout_marginStart="6dp"
                         android:layout_marginTop="64dp"
                         android:fontFamily="@font/poppins_regular"
-                        android:text="@string/clock_attendance"
                         android:textSize="32sp"
                         android:textStyle="bold" />
                 </androidx.cardview.widget.CardView>
@@ -178,7 +175,6 @@
                         android:layout_marginStart="40dp"
                         android:layout_marginTop="30dp"
                         android:fontFamily="@font/poppins_regular"
-                        android:text="@string/checkout_info"
                         android:textSize="11sp" />
 
                     <TextView
@@ -188,7 +184,6 @@
                         android:layout_marginStart="6dp"
                         android:layout_marginTop="64dp"
                         android:fontFamily="@font/poppins_regular"
-                        android:text="@string/clock_checkout"
                         android:textSize="32sp"
                         android:textStyle="bold" />
                 </androidx.cardview.widget.CardView>
@@ -217,7 +212,6 @@
                             android:layout_marginStart="6dp"
                             android:layout_marginTop="64dp"
                             android:fontFamily="@font/poppins_regular"
-                            android:text="@string/days_absent"
                             android:textSize="32sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
@@ -271,7 +265,6 @@
                         android:layout_marginStart="40dp"
                         android:layout_marginTop="30dp"
                         android:fontFamily="@font/poppins_regular"
-                        android:text="@string/month_absent_info"
                         android:textSize="11sp" />
 
                 </androidx.cardview.widget.CardView>
@@ -353,7 +346,6 @@
                         android:layout_marginStart="40dp"
                         android:layout_marginTop="30dp"
                         android:fontFamily="@font/poppins_regular"
-                        android:text="@string/month_total_attendance_info"
                         android:textSize="11sp" />
 
                 </androidx.cardview.widget.CardView>

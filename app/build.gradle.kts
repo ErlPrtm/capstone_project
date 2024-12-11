@@ -131,7 +131,7 @@ dependencies {
     implementation(libs.smoothbottombar)
 
     // Splash Screen
-    implementation ("androidx.core:core-splashscreen:1.0.1")
+    implementation (libs.androidx.core.splashscreen)
 
     // Bar Chart
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
@@ -141,4 +141,7 @@ dependencies {
     implementation("androidx.camera:camera-lifecycle:1.2.3")
     implementation("androidx.camera:camera-view:1.2.3")
 
+    // Parsing data Json
+    implementation ("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation ("com.google.code.gson:gson:2.8.9")
 }

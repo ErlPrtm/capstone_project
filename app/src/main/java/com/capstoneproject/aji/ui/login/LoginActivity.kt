@@ -14,6 +14,7 @@ import com.capstoneproject.aji.data.UserPreferences
 import com.capstoneproject.aji.data.model.User
 import com.capstoneproject.aji.databinding.ActivityLoginBinding
 import com.capstoneproject.aji.ui.main.MainActivity
+//import com.capstoneproject.aji.viewmodel.HomeViewModel
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -31,7 +32,6 @@ class LoginActivity : AppCompatActivity() {
         binding.btnLogin.setOnClickListener {
             val username = binding.etUsername.text.toString().trim()
             val password = binding.inputPassword.text.toString().trim()
-
 
             if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Harap isi semua kolom", Toast.LENGTH_SHORT).show()
@@ -64,6 +64,8 @@ class LoginActivity : AppCompatActivity() {
                         userPreferences.saveRole(role)
                         userPreferences.saveUserId(userId!!)
                         Log.d("performLogin", "User Id: $userId")
+                        Log.d("performLogin", "Token: $token")
+
                         saveUserData(token, user)
                         navigateToMain()
                     } else {
@@ -82,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
 
     private suspend fun saveUserData(token: String, user: User) {
         val userDetails = mapOf(
-            "user_id" to user.user_id.toString(),
+//            "user_id" to user.user_id.toString(),
             "username" to user.username,
             "fullname" to user.fullname,
             "email" to user.email,
