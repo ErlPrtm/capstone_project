@@ -21,8 +21,8 @@ import androidx.lifecycle.lifecycleScope
 import com.capstoneproject.aji.data.UserPreferences
 import com.capstoneproject.aji.data.repository.AuthRepository
 import com.capstoneproject.aji.databinding.FragmentAbsenceBinding
-import com.capstoneproject.aji.ui.attendance.AttendanceViewModel
-import com.capstoneproject.aji.ui.attendance.AttendanceViewModelFactory
+import com.capstoneproject.aji.viewmodel.attendance.AttendanceViewModel
+import com.capstoneproject.aji.viewmodel.attendance.AttendanceViewModelFactory
 import com.capstoneproject.aji.ui.camera.CameraActivity
 import com.capstoneproject.aji.ui.camera.CameraActivity.Companion.CAMERAX_RESULT
 import com.google.android.gms.location.FusedLocationProviderClient
