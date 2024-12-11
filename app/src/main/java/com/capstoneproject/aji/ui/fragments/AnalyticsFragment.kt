@@ -21,9 +21,14 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Retrofit
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class AnalyticsFragment : Fragment() {
     private var _binding: FragmentAnalyticsBinding? = null
@@ -42,26 +47,19 @@ class AnalyticsFragment : Fragment() {
         homeViewModel = HomeViewModel(RetrofitInstance.api, userPreferences)
 
         checkAuthenticationAndLoadData()
-        homeViewModel.attendanceLog.observe(viewLifecycleOwner) { attendanceLogs ->
-            if(!attendanceLogs.isNullOrEmpty()) {
-                dataListing(attendanceLogs)
-                Log.d("AnalyticsFragment", "Data listing, attendanceLogs $attendanceLogs")
-            } else {
-                Log.e("AnalyticsFragment", "No Attendance Data Available")
-            }
-        }
+        fetchAttendanceLogs()
+        observeAttendanceData()
 
         return binding.root
     }
     private fun checkAuthenticationAndLoadData() {
         lifecycleScope.launch {
-            userPreferences.getToken().collect{ token ->
-                if(!token.isNullOrEmpty()) {
-                    val username = extractUsernameFromToken(token)
-                    binding.tvUsername.text = username ?: "Pengguna"
-                } else {
-                    redirectToLogin()
-                }
+            val isLoggedIn = userPreferences.isLoggedIn().first()
+            if (isLoggedIn) {
+                val fullname = userPreferences.getUserDetail("fullname").first() ?: "Pengguna"
+                binding.tvUsername.text = fullname
+            } else {
+                redirectToLogin()
             }
         }
     }
@@ -73,37 +71,78 @@ class AnalyticsFragment : Fragment() {
         requireActivity().finish()
     }
 
-    private fun extractUsernameFromToken(token: String): String? {
-        return try {
-            val parts = token.split(".")
-            if (parts.size == 3) {
-                val payload = String(android.util.Base64.decode(parts[1], android.util.Base64.DEFAULT))
-                val json = JSONObject(payload)
-                json.optString("username", "pengguna")
+    private fun fetchAttendanceLogs() {
+        lifecycleScope.launch {
+            userPreferences.getUserId()
+                .collect { userId ->
+                    if(userId != null) {
+                        homeViewModel.fetchAttendanceLogs(userId)
+                    } else {
+                        Log.e("HomeFragment", "User id is null")
+                    }
+                }
+        }
+    }
+
+    private fun observeAttendanceData() {
+        homeViewModel.attendanceLog.observe(viewLifecycleOwner) { attendanceLogs ->
+            if(!attendanceLogs.isNullOrEmpty()) {
+                Log.d("AnalyticsFragment", "Data listing, attendanceLogs $attendanceLogs")
+                dataListing(attendanceLogs)
             } else {
-                null
+                Log.e("AnalyticsFragment", "No Attendance Data Available")
             }
-        } catch (e: Exception) {
-            null
         }
     }
 
     private fun dataListing(attendanceLogs: List<AttendanceLog>) {
         paymentParameter.clear()
 
-        val totalLate = attendanceLogs.count { it.status_login == "late"}
-        val totalAbsent = attendanceLogs.count { it.status_login == "absent"}
-        val totalOntime = attendanceLogs.count { it.status_login == "on time"}
+        // Ambil bulan dan tahun terakhir dari log
+        val latestMonth = attendanceLogs.maxByOrNull { log ->
+            parseDate(log.tanggal)?.time ?: 0
+        }?.tanggal?.let { extractMonthYear(it) }
 
-        Log.d("AnalyticsFragment", "Total late : $totalLate Total absent : $totalAbsent Total On time : $totalOntime")
+        // Filter log berdasarkan bulan terakhir
+        val filteredLogs = attendanceLogs.filter { log ->
+            extractMonthYear(log.tanggal) == latestMonth
+        }
 
+        // Hitung jumlah status per kategori untuk bulan terakhir
+        val totalLate = filteredLogs.count { it.status_login == "late" }
+        val totalAbsent = filteredLogs.count { it.status_login == "absent" }
+        val totalOntime = filteredLogs.count { it.status_login == "on time" }
+
+        Log.d("AnalyticsFragment", "Latest month: $latestMonth")
+        Log.d("AnalyticsFragment", "Total late: $totalLate, Total absent: $totalAbsent, Total on time: $totalOntime for $latestMonth")
+
+        // Tambahkan ke paymentParameter
         paymentParameter.add(BarEntry(0f, totalLate.toFloat()))
         paymentParameter.add(BarEntry(1f, totalAbsent.toFloat()))
         paymentParameter.add(BarEntry(2f, totalOntime.toFloat()))
 
-        Log.d("AnalyticsFragment", "Payment parameter : $paymentParameter")
-
         setChart()
+    }
+
+    private fun extractMonthYear(dateString: String): String {
+        return try {
+            val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(dateString)
+            date?.let {
+                SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(it)
+            } ?: "-"
+        } catch (e: Exception) {
+            Log.e("AnalyticsFragment", "Error extracting month year : ${e.message}")
+            "-"
+        }
+    }
+
+    private fun parseDate(dateString: String): Date? {
+        return try {
+            SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(dateString)
+        } catch (e: Exception) {
+            Log.e("AnalyticsFragment", "Error parsing date ${e.message}")
+            null
+        }
     }
 
     private fun setChart() {

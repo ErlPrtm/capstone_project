@@ -5,6 +5,7 @@ import com.capstoneproject.aji.data.model.AttendanceResponse
 import com.capstoneproject.aji.data.model.LoginRequest
 import com.capstoneproject.aji.data.model.LoginResponse
 import com.capstoneproject.aji.data.model.Pegawai
+import com.capstoneproject.aji.data.model.SalaryParameterResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -29,6 +30,12 @@ interface ApiService {
     suspend fun getAttendanceLogs(
         @Path("user_id") userId: Int
     ): Response<AttendanceLogResponse>
+
+    @GET("api/parameter_gaji")
+    suspend fun getSalaryParameter(
+        @Header("Authorization") token: String,
+        @Query("parameter_id") parameterId: Int?
+    ): SalaryParameterResponse
 
     @GET("api/data_pegawai")
     suspend fun getAllPegawai(

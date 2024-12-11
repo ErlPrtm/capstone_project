@@ -43,3 +43,12 @@ data class AttendanceLog(
     @SerializedName("status_logout")
     val status_logout: String
 )
+
+data class SalaryParameterResponse(
+    val absen: String,
+    val insentif: String,
+    val lembur: String,
+    val parameter_id: Int,
+    val posisi: String,
+    val telat: String
+)

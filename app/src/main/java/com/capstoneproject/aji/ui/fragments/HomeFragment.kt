@@ -4,23 +4,18 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-//import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-//import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-//import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstoneproject.aji.data.UserPreferences
 import com.capstoneproject.aji.data.adapter.AttendanceAdapter
 import com.capstoneproject.aji.data.api.RetrofitInstance
-//import com.capstoneproject.aji.data.api.RetrofitInstance
 import com.capstoneproject.aji.databinding.FragmentHomeBinding
 import com.capstoneproject.aji.ui.login.LoginActivity
 import com.capstoneproject.aji.viewmodel.HomeViewModel
-//import com.capstoneproject.aji.viewmodel.HomeViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -142,13 +137,6 @@ class HomeFragment : Fragment() {
                 binding.tvClockCheckout.text = formatTime(latestLog.logout_time ?: "N/A")
 
             // Absence Card
-                val totalAbsent = attendanceLogs.count { log -> log.status_login == "absent"}
-                binding.tvDaysAbsent.text = totalAbsent.toString()
-
-                val currentMonth = latestLog.tanggal.let { extractMonth(it) }
-                binding.tvMonthAbsent.text = currentMonth
-
-            // Total Attended Card
                 val latestMonth = attendanceLogs.maxByOrNull { log ->
                     parseDate(log.tanggal)?.time ?: 0
                 } ?.tanggal?.let { extractMonthYear(it) }
@@ -157,6 +145,13 @@ class HomeFragment : Fragment() {
                     extractMonthYear(log.tanggal) == latestMonth
                 }
 
+                val totalAbsent = filteredLogs.count { log -> log.status_login == "absent"}
+                binding.tvDaysAbsent.text = totalAbsent.toString()
+
+                val currentMonth = latestLog.tanggal.let { extractMonth(it) }
+                binding.tvMonthAbsent.text = currentMonth
+
+            // Total Attended Card
                 val totalAttended = filteredLogs.count {
                     it.status_login.isNotEmpty() && it.status_logout.isNotEmpty()
                 }
