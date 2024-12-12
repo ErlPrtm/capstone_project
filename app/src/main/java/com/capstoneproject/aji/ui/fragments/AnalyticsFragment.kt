@@ -1,5 +1,6 @@
 package com.capstoneproject.aji.ui.fragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,8 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import com.capstoneproject.aji.data.UserPreferences
 import com.capstoneproject.aji.data.api.RetrofitInstance
 import com.capstoneproject.aji.data.model.AttendanceLog
+import com.capstoneproject.aji.data.model.SalaryData
 import com.capstoneproject.aji.databinding.FragmentAnalyticsBinding
 import com.capstoneproject.aji.ui.login.LoginActivity
+import com.capstoneproject.aji.viewmodel.AnalyticsViewModel
 import com.capstoneproject.aji.viewmodel.HomeViewModel
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -22,7 +25,10 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import okhttp3.internal.format
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -32,6 +38,7 @@ class AnalyticsFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var userPreferences: UserPreferences
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var analyticsViewModel: AnalyticsViewModel
 
     val paymentParameter = ArrayList<BarEntry>()
 
@@ -42,10 +49,13 @@ class AnalyticsFragment : Fragment() {
         _binding = FragmentAnalyticsBinding.inflate(inflater, container, false)
         userPreferences = UserPreferences(requireContext())
         homeViewModel = HomeViewModel(RetrofitInstance.api, userPreferences)
+        analyticsViewModel = AnalyticsViewModel(RetrofitInstance.api, userPreferences)
 
         checkAuthenticationAndLoadData()
         fetchAttendanceLogs()
+        fetchPaymentParameter()
         observeAttendanceData()
+        observePaymentParameter()
 
         return binding.root
     }
@@ -91,6 +101,61 @@ class AnalyticsFragment : Fragment() {
             }
         }
     }
+
+    private fun fetchPaymentParameter() {
+        lifecycleScope.launch {
+            val rawToken = userPreferences.getToken().firstOrNull()
+            val token = if(rawToken.isNullOrBlank()) null else "Bearer $rawToken"
+            val parameterId = 1
+
+            Log.d("AnalyticsFragment", "Token: $token, Parameter ID: $parameterId")
+            if (token == null) {
+                Log.e("AnalyticsFragment", "Token tidak ditemukan.")
+                return@launch
+            }
+
+            analyticsViewModel.fetchSalaryParameter("$token", parameterId)
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun observePaymentParameter() {
+        analyticsViewModel.salaryParameters.observe(viewLifecycleOwner) { paymentParameter ->
+            if(!paymentParameter.isNullOrEmpty()) {
+//                Log.d("AnalyticsFragment", "Data listing payment parameter $paymentParameter")
+
+                val salaryData = paymentParameter.first()
+                binding.tvFeeMoney.text = formatToCurrency(salaryData.insentif)
+                binding.tvLateMoney.text = formatToCurrency(salaryData.telat)
+                binding.tvAbsentMoney.text = formatToCurrency(salaryData.absen)
+                binding.tvOvertimeMoney.text = formatToCurrency(salaryData.lembur)
+
+                val accumulatedFee = calculateAccumulatedFee(salaryData)
+                Log.d("Analyticsfragment", "Accumulated Fee : $accumulatedFee")
+                binding.tvAccumulatedMoney.text = formatToCurrency(accumulatedFee.toDouble())
+            } else {
+                Log.e("Analyticsfragment", "No salary parameters available")
+            }
+        }
+    }
+
+    private fun formatToCurrency(amount: Double): String {
+        val numberFormat = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
+
+        numberFormat.minimumFractionDigits = 0
+        numberFormat.maximumFractionDigits = 0
+        return numberFormat.format(amount)
+    }
+
+    private fun calculateAccumulatedFee(salaryData: SalaryData): Int {
+        val absen = salaryData.absen.toInt()
+        val telat = salaryData.telat.toInt()
+        val lembur = salaryData.lembur.toInt()
+        val insentif = salaryData.insentif.toInt()
+
+        return (insentif + lembur) - (absen + telat)
+    }
+
 
     private fun dataListing(attendanceLogs: List<AttendanceLog>) {
         paymentParameter.clear()

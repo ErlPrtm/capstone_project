@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.capstoneproject.aji.data.UserPreferences
 import com.capstoneproject.aji.data.api.ApiService
+import com.capstoneproject.aji.data.model.SalaryData
 import com.capstoneproject.aji.data.model.SalaryParameterResponse
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -16,25 +17,17 @@ class AnalyticsViewModel(
     private val apiService: ApiService,
     private val userPreferences: UserPreferences ?= null
 ): ViewModel() {
-    private val _salaryParameters = MutableLiveData<SalaryParameterResponse>()
-    val salaryParameters: LiveData<SalaryParameterResponse> get() = _salaryParameters
+    private val _salaryParameters = MutableLiveData<List<SalaryData>>()
+    val salaryParameters: LiveData<List<SalaryData>> get() = _salaryParameters
 
-    suspend fun getToken(): String? {
-        return userPreferences?.getToken()?.firstOrNull()
-    }
-
-    fun fetchSalaryParameter(parameterId: Int ?= null) {
+    fun fetchSalaryParameter(token: String, parameterId: Int ?= null) {
         viewModelScope.launch {
-            val token = getToken()
-            if(token != null) {
-                try {
-                    val response = apiService.getSalaryParameter("Bearer $token", parameterId)
-                    _salaryParameters.postValue(response)
-                } catch(e: Exception) {
-                    Log.e("AnalyticsViewModel", "Failed to fetch salary parameters", e)
-                }
-            } else {
-                Log.e("AnalyticsViewModel", "Token missing")
+            try {
+                val response = apiService.getSalaryParameter(token, parameterId)
+
+                _salaryParameters.postValue(listOf(response.data))
+            } catch(e: Exception) {
+                Log.e("AnalyticsViewModel", "Failed to fetch salary parameters", e)
             }
         }
     }

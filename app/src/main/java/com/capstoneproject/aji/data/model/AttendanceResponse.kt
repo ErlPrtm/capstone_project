@@ -45,12 +45,17 @@ data class AttendanceLog(
 )
 
 data class SalaryParameterResponse(
-    val absen: String,
-    val insentif: String,
-    val lembur: String,
+    val data: SalaryData,
+    val status: String
+)
+
+data class SalaryData(
+    val absen: Double,
+    val insentif: Double,
+    val lembur: Double,
     val parameter_id: Int,
     val posisi: String,
-    val telat: String
+    val telat: Double
 )
 
 data class CheckoutResponse(

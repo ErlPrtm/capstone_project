@@ -3,7 +3,7 @@
 
     <style name="Theme.Aji.SplashScreen" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/teal</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/absen_logo_vector</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
         <item name="postSplashScreenTheme">@style/Theme.Aji</item>
     </style>
 </resources>

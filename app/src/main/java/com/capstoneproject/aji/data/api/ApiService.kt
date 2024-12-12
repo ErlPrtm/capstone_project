@@ -38,10 +38,10 @@ interface ApiService {
         @Path("user_id") userId: Int
     ): Response<AttendanceLogResponse>
 
-    @GET("api/parameter_gaji")
+    @GET("api/parameter_gaji/{parameter_id}")
     suspend fun getSalaryParameter(
         @Header("Authorization") token: String,
-        @Query("parameter_id") parameterId: Int?
+        @Path("parameter_id") parameterId: Int?
     ): SalaryParameterResponse
 
     @GET("api/data_pegawai")
