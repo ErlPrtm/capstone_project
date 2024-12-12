@@ -63,7 +63,7 @@ class AccountFragment : Fragment() {
                 Glide.with(this@AccountFragment)
                     .load(profileImageUrl)
                     .placeholder(R.drawable.placeholder_image)
-                    .error(R.drawable.error_image)
+                    .error(R.drawable.avatars)
                     .into(binding.ivAccountProfile)
             } else {
                 redirectToLogin()
