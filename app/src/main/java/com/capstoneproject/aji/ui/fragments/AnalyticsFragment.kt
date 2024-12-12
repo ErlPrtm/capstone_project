@@ -123,7 +123,7 @@ class AnalyticsFragment : Fragment() {
 
     private fun extractMonthYear(dateString: String): String {
         return try {
-            val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(dateString)
+            val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).parse(dateString)
             date?.let {
                 SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(it)
             } ?: "-"
@@ -135,7 +135,7 @@ class AnalyticsFragment : Fragment() {
 
     private fun parseDate(dateString: String): Date? {
         return try {
-            SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(dateString)
+            SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).parse(dateString)
         } catch (e: Exception) {
             Log.e("AnalyticsFragment", "Error parsing date ${e.message}")
             null

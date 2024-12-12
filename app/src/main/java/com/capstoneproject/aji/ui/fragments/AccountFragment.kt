@@ -123,8 +123,7 @@ class AccountFragment : Fragment() {
     private fun extractMonth(dateString: String?): String {
         return try {
             if (!dateString.isNullOrEmpty()) {
-                val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault())
-                    .parse(dateString)
+                val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).parse(dateString)
                 date?.let {
                     SimpleDateFormat("MMMM", Locale.getDefault()).format(it)
                 } ?: "N/A"
@@ -140,8 +139,7 @@ class AccountFragment : Fragment() {
     private fun extractMonthYear(dateString: String?): String {
         return try {
             if (!dateString.isNullOrEmpty()) {
-                val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault())
-                    .parse(dateString)
+                val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).parse(dateString)
                 date?.let {
                     SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(it)
                 } ?: "-"
@@ -157,7 +155,7 @@ class AccountFragment : Fragment() {
     private fun parseDate(dateString: String?): Date? {
         return try {
             if (!dateString.isNullOrEmpty()) {
-                SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(dateString)
+                SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).parse(dateString)
             } else {
                 null
             }
