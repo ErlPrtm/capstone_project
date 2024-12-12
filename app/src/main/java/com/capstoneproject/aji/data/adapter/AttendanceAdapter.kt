@@ -24,7 +24,7 @@ class AttendanceAdapter : RecyclerView.Adapter<AttendanceAdapter.AttendanceViewH
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AttendanceViewHolder {
-        val binding = AttendanceHistoryTableBinding .inflate(
+        val binding = AttendanceHistoryTableBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -48,7 +48,6 @@ class AttendanceAdapter : RecyclerView.Adapter<AttendanceAdapter.AttendanceViewH
         private val timeFormat = SimpleDateFormat("HH:mm", Locale.US)
 
         fun bind(attendanceLog: AttendanceLog) {
-
             binding.tvDate.text = formatDate(attendanceLog.tanggal)
             binding.tvAttendance.text = formatTime(attendanceLog.login_time)
             binding.tvCheckout.text = formatTime(attendanceLog.logout_time) ?: "N/A"
@@ -93,21 +92,24 @@ class AttendanceAdapter : RecyclerView.Adapter<AttendanceAdapter.AttendanceViewH
         }
 
         private fun calculateTotalHours(loginTime: String, logoutTime: String?): String {
-            if(logoutTime.isNullOrEmpty()) return "-"
+            if (logoutTime.isNullOrEmpty()) return "-"
 
             return try {
-                val format = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault())
+                val format = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
+                format.timeZone = TimeZone.getTimeZone("GMT")
 
                 val login = format.parse(loginTime)
                 val logout = format.parse(logoutTime)
 
-                val diff = (logout?.time ?: 0) - (login?.time ?: 0)
-                val hours = TimeUnit.MILLISECONDS.toHours(diff)
-                val minutes = TimeUnit.MILLISECONDS.toMinutes(diff) - TimeUnit.HOURS.toMinutes(hours)
+                if (login != null && logout != null) {
+                    val diff = logout.time - login.time
+                    val hours = TimeUnit.MILLISECONDS.toHours(diff)
+                    val minutes = TimeUnit.MILLISECONDS.toMinutes(diff) % 60
 
-                val correctedMinutes = if(minutes < 0) 0 else minutes
-
-                "$hours jam $correctedMinutes menit"
+                    "$hours jam $minutes menit"
+                } else {
+                    "-"
+                }
             } catch (e: Exception) {
                 Log.e("AttendanceViewHolder", "Error calculating total hours: ${e.message}")
                 "-"
@@ -115,4 +117,5 @@ class AttendanceAdapter : RecyclerView.Adapter<AttendanceAdapter.AttendanceViewH
         }
     }
 }
+
 

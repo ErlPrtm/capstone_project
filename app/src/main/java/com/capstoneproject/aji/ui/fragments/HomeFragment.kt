@@ -27,7 +27,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var preferenceHelper: UserPreferences
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var attendanceAdapter : AttendanceAdapter
+    private lateinit var attendanceAdapter: AttendanceAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,7 +72,7 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             preferenceHelper.getUserId()
                 .collect { userId ->
-                    if(userId != null) {
+                    if (userId != null) {
                         homeViewModel.fetchAttendanceLogs(userId)
                     } else {
                         Log.e("HomeFragment", "User id is null")
@@ -129,15 +129,12 @@ class HomeFragment : Fragment() {
                 val latestLog = attendanceLogs.lastOrNull()
 
                 if (latestLog != null) {
-                    // Attendance Card
                     binding.tvNotesAttendance.text = latestLog.status_login
                     binding.tvNotesCheckout.text = latestLog.status_logout
 
-                    // Checkout Card
                     binding.tvClockAttendance.text = formatTime(latestLog.login_time)
                     binding.tvClockCheckout.text = formatTime(latestLog.logout_time ?: "N/A")
 
-                    // Absence Card
                     val latestMonth = attendanceLogs.maxByOrNull { log ->
                         parseDate(log.tanggal)?.time ?: 0
                     }?.tanggal?.let { extractMonthYear(it) }
@@ -152,7 +149,6 @@ class HomeFragment : Fragment() {
                     val currentMonth = latestLog.tanggal.let { extractMonth(it) }
                     binding.tvMonthAbsent.text = currentMonth
 
-                    // Total Attended Card
                     val totalAttended = filteredLogs.count {
                         !it.status_login.isNullOrEmpty() && !it.status_logout.isNullOrEmpty()
                     }
@@ -168,33 +164,40 @@ class HomeFragment : Fragment() {
         }
     }
 
-
-    private fun extractMonth(dateString: String): String {
-        return try {
-            val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(dateString)
-            date?.let {
-                SimpleDateFormat("MMMM", Locale.getDefault()).format(it)
-            } ?: "N/A"
-        } catch (e: Exception) {
-            Log.e("HomeFragment", "Error exctracting month : ${e.message}")
+    private fun extractMonth(dateString: String?): String {
+        return if (!dateString.isNullOrEmpty()) {
+            try {
+                val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).parse(dateString)
+                date?.let {
+                    SimpleDateFormat("MMMM", Locale.US).format(it)
+                } ?: "N/A"
+            } catch (e: Exception) {
+                Log.e("HomeFragment", "Error extracting month: ${e.message}")
+                "N/A"
+            }
+        } else {
             "N/A"
         }
     }
 
-    private fun extractMonthYear(dateString: String): String {
-        return try {
-            val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(dateString)
-            date?.let {
-                SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(it)
-            } ?: "-"
-        } catch (e: Exception) {
-            Log.e("HomeFragment", "Error extracting month year : ${e.message}")
+    private fun extractMonthYear(dateString: String?): String {
+        return if (!dateString.isNullOrEmpty()) {
+            try {
+                val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).parse(dateString)
+                date?.let {
+                    SimpleDateFormat("MMMM yyyy", Locale.US).format(it)
+                } ?: "-"
+            } catch (e: Exception) {
+                Log.e("HomeFragment", "Error extracting month year: ${e.message}")
+                "-"
+            }
+        } else {
             "-"
         }
     }
 
-    private fun formatTime(timeString: String): String {
-        return if (!timeString.isNullOrEmpty()) {
+    private fun formatTime(timeString: String?): String {
+        return if (!timeString.isNullOrEmpty() && timeString != "N/A") {
             try {
                 val inputFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
                 inputFormat.timeZone = TimeZone.getTimeZone("GMT")
@@ -207,7 +210,7 @@ class HomeFragment : Fragment() {
                     outputFormat.format(it)
                 } ?: "-"
             } catch (e: Exception) {
-                Log.e("HomeFragment", "Error formatting time ${e.message}")
+                Log.e("HomeFragment", "Error formatting time: ${e.message}")
                 "-"
             }
         } else {
@@ -215,11 +218,15 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun parseDate(dateString: String): Date? {
-        return try {
-            SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(dateString)
-        } catch (e: Exception) {
-            Log.e("HomeFragment", "Error parsing date ${e.message}")
+    private fun parseDate(dateString: String?): Date? {
+        return if (!dateString.isNullOrEmpty() && dateString != "N/A") {
+            try {
+                SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).parse(dateString)
+            } catch (e: Exception) {
+                Log.e("HomeFragment", "Error parsing date: ${e.message}")
+                null
+            }
+        } else {
             null
         }
     }
