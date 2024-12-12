@@ -29,11 +29,11 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import kotlin.reflect.jvm.internal.impl.metadata.ProtoBuf.Visibility
 
 class AbsenceFragment : Fragment() {
 
@@ -54,8 +54,14 @@ class AbsenceFragment : Fragment() {
 //        private const val TARGET_LNG = 112.6967925
 //        private const val RADIUS_METERS = 50f
 
-        private const val TARGET_LAT = 37.4220936
-        private const val TARGET_LNG = -122.083922
+        // Lokasi Mas dyo
+//        private const val TARGET_LAT = 37.4220936
+//        private const val TARGET_LNG = -122.083922
+//        private const val RADIUS_METERS = 50f
+
+        // Lokasi Angga
+        private const val TARGET_LAT = -6.4171433
+        private const val TARGET_LNG = 106.8407917
         private const val RADIUS_METERS = 50f
 
         // Variabel untuk menyimpan lokasi pengguna
@@ -108,6 +114,11 @@ class AbsenceFragment : Fragment() {
             saveAttendance()
         }
 
+        binding.btnCheckout.setOnClickListener {
+            Log.d(TAG, "Tombol checkout diclick")
+            checkout()
+        }
+
         binding.btnGallery.setOnClickListener {
             Log.d(TAG, "Tombol galeri diklik.")
             openGallery()
@@ -115,6 +126,7 @@ class AbsenceFragment : Fragment() {
 
         setDateToday()
         updateClock()
+        checkLoginStatus()
 
         return binding.root
     }
@@ -174,6 +186,20 @@ class AbsenceFragment : Fragment() {
                 val formattedTime = timeFormat.format(currentTime)
                 binding.tvClock.text = formattedTime
                 kotlinx.coroutines.delay(1000)
+            }
+        }
+    }
+
+    private fun checkLoginStatus() {
+        lifecycleScope.launch {
+            val isLoggedIn = userPreferences.getStatusAbsence().firstOrNull()
+
+            if(isLoggedIn.isNullOrEmpty()) {
+                binding.btnSave.visibility = View.VISIBLE
+                binding.btnCheckout.visibility = View.GONE
+            } else {
+                binding.btnSave.visibility = View.GONE
+                binding.btnCheckout.visibility = View.VISIBLE
             }
         }
     }
@@ -277,6 +303,13 @@ class AbsenceFragment : Fragment() {
                     onSuccess = { response ->
                         Log.d(TAG, "Absensi berhasil: ${response.message}")
                         showToast("Yeay! Absensi berhasil: ${response.message}")
+
+                        binding.btnSave.visibility = View.GONE
+                        binding.btnCheckout.visibility = View.VISIBLE
+
+                        lifecycleScope.launch {
+                            userPreferences.setStatusAbsence("absence")
+                        }
                     },
                     onError = { error ->
                         Log.e(TAG, "Gagal absensi: $error")
@@ -286,6 +319,43 @@ class AbsenceFragment : Fragment() {
             } catch (e: Exception) {
                 Log.e(TAG, "Error absensi: ${e.message}", e)
                 showToast("Ups! Ada error: ${e.message ?: "Tidak diketahui"}")
+            }
+        }
+    }
+
+    private fun checkout() {
+        lifecycleScope.launch {
+            try {
+                val token = userPreferences.getToken().firstOrNull()
+                val userId = userPreferences.getUserId().firstOrNull()
+
+                if(token == null || userId == null) {
+                    showToast("User id atau token tidak ditemukan. Pastikan anda sudah login")
+                    return@launch
+                }
+
+                attendanceViewModel.checkout(
+                    token = token,
+                    userId = userId,
+                    onSuccess =  { response ->
+                        Log.d(TAG, "Checkout Berhasil: ${response.message}")
+                        showToast("Checkout Berhasil: ${response.message}")
+
+                        binding.btnCheckout.visibility = View.GONE
+                        binding.btnSave.visibility = View.VISIBLE
+
+                        lifecycleScope.launch {
+                            userPreferences.setStatusAbsence("")
+                        }
+                    },
+                    onError = { error ->
+                        Log.e(TAG, "Checkout gagal: $error")
+                        showToast("Checkout gagal: $error")
+                    }
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "Error saat checkout: ${e.message}")
+                showToast("Error saat checkout: ${e.message}")
             }
         }
     }
@@ -321,7 +391,9 @@ class AbsenceFragment : Fragment() {
     }
 
     private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        context?.let {
+            Toast.makeText(it, message, Toast.LENGTH_SHORT).show()
+        } ?: Log.e("AbsenceFragment", "Absence Fragment context is null. Can't show toast")
     }
 
     override fun onDestroyView() {

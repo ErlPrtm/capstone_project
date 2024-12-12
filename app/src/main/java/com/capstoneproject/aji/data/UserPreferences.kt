@@ -21,6 +21,7 @@ class UserPreferences(context: Context) {
         private val DARK_MODE_KEY = booleanPreferencesKey("dark_mode")
         private val ROLE_KEY = stringPreferencesKey("role")
         private val USER_ID_KEY = intPreferencesKey("user_id")
+        private val STATUS_ABSENCE_KEY = stringPreferencesKey("status_absence")
         private val USER_DETAILS_PREFIX = "user_detail_"
     }
 
@@ -58,6 +59,17 @@ class UserPreferences(context: Context) {
         return dataStore.data
             .catchException()
             .map { preferences -> preferences[LOGGED_IN_KEY] ?: false }
+    }
+
+    fun getStatusAbsence(): Flow<String?> {
+        return dataStore.data
+            .map { preferences -> preferences[STATUS_ABSENCE_KEY] }
+    }
+
+    suspend fun setStatusAbsence(status: String) {
+        dataStore.edit { preferences ->
+            preferences[STATUS_ABSENCE_KEY] = status
+        }
     }
 
     suspend fun setDarkModeEnabled(isEnabled: Boolean) {
@@ -100,7 +112,11 @@ class UserPreferences(context: Context) {
 
     suspend fun clear() {
         dataStore.edit { preferences ->
-            preferences.clear()
+            preferences.remove(TOKEN_KEY)
+            preferences.remove(LOGGED_IN_KEY)
+            preferences.remove(DARK_MODE_KEY)
+            preferences.remove(ROLE_KEY)
+            preferences.remove(USER_ID_KEY)
         }
     }
 

@@ -3,6 +3,7 @@ package com.capstoneproject.aji.data.repository
 import android.util.Log
 import com.capstoneproject.aji.data.api.RetrofitInstance
 import com.capstoneproject.aji.data.model.AttendanceResponse
+import com.capstoneproject.aji.data.model.CheckoutResponse
 import com.capstoneproject.aji.data.model.LoginRequest
 import com.capstoneproject.aji.data.model.LoginResponse
 import okhttp3.MediaType.Companion.toMediaType
@@ -32,5 +33,12 @@ class AuthRepository {
         )
         Log.d("AuthRepository", "Mengirim data absensi: Token: Bearer $token, User ID: $userId, Foto: ${fotoFile.name}")
         return RetrofitInstance.api.absen("Bearer $token", userIdPart, fotoPart)
+    }
+
+    suspend fun checkout(
+        token: String,
+        userId: Int
+    ) : Response<CheckoutResponse> {
+        return RetrofitInstance.api.checkout("Bearer $token", userId)
     }
 }

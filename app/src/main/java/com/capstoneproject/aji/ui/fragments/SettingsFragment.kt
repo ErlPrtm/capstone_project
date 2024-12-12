@@ -12,6 +12,7 @@ import com.capstoneproject.aji.data.UserPreferences
 import com.capstoneproject.aji.databinding.FragmentSettingsBinding
 import com.capstoneproject.aji.ui.login.LoginActivity
 import com.capstoneproject.aji.ui.pegawai.PegawaiActivity
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
 class SettingsFragment : Fragment() {
@@ -29,6 +30,7 @@ class SettingsFragment : Fragment() {
 
         setupListeners()
         setupInitialStates()
+
         return binding.root
     }
 
@@ -70,7 +72,14 @@ class SettingsFragment : Fragment() {
 
     private fun performLogout() {
         lifecycleScope.launch {
+            val statusAbsence = userPreferences.getStatusAbsence().firstOrNull()
+
             userPreferences.clear()
+
+            if(!statusAbsence.isNullOrEmpty()) {
+                userPreferences.setStatusAbsence(statusAbsence)
+            }
+
             val intent = Intent(requireContext(), LoginActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             }

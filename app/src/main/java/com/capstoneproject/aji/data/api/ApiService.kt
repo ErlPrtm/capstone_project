@@ -2,6 +2,7 @@ package com.capstoneproject.aji.data.api
 
 import com.capstoneproject.aji.data.model.AttendanceLogResponse
 import com.capstoneproject.aji.data.model.AttendanceResponse
+import com.capstoneproject.aji.data.model.CheckoutResponse
 import com.capstoneproject.aji.data.model.LoginRequest
 import com.capstoneproject.aji.data.model.LoginResponse
 import com.capstoneproject.aji.data.model.Pegawai
@@ -25,6 +26,12 @@ interface ApiService {
         @Part("user_id") userId: RequestBody,
         @Part foto: MultipartBody.Part
     ): Response<AttendanceResponse>
+
+    @POST("api/users/checkout")
+    suspend fun checkout(
+        @Header("Authorization") token: String,
+        @Query("user_id") userId: Int
+    ): Response<CheckoutResponse>
 
     @GET("api/log_kehadiran/absen/{user_id}")
     suspend fun getAttendanceLogs(

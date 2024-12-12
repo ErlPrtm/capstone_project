@@ -90,4 +90,5 @@
     <string name="potongan">Potongan</string>
     <string name="overtime">Overtime</string>
     <string name="accumulated_fee">Accumulated Fee</string>
+    <string name="gallery_placeholder">Gallery</string>
 </resources>

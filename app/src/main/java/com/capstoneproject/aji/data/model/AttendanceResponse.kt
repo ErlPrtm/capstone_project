@@ -52,3 +52,15 @@ data class SalaryParameterResponse(
     val posisi: String,
     val telat: String
 )
+
+data class CheckoutResponse(
+    val status: String,
+    val message: String,
+    val data: CheckoutData?
+)
+
+data class CheckoutData (
+    val logout_time: String,
+    val overtime_hours: String,
+    val status_logout: String
+)
