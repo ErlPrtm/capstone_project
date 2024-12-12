@@ -125,45 +125,49 @@ class HomeFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun setupDataCard() {
         homeViewModel.attendanceLog.observe(viewLifecycleOwner) { attendanceLogs ->
-            val latestLog = attendanceLogs?.lastOrNull()
+            if (!attendanceLogs.isNullOrEmpty()) {
+                val latestLog = attendanceLogs.lastOrNull()
 
-            if(latestLog != null) {
-            // Attendance Card
-                binding.tvNotesAttendance.text = latestLog.status_login
-                binding.tvNotesCheckout.text = latestLog.status_logout
+                if (latestLog != null) {
+                    // Attendance Card
+                    binding.tvNotesAttendance.text = latestLog.status_login
+                    binding.tvNotesCheckout.text = latestLog.status_logout
 
-            // Checkout Card
-                binding.tvClockAttendance.text = formatTime(latestLog.login_time)
-                binding.tvClockCheckout.text = formatTime(latestLog.logout_time ?: "N/A")
+                    // Checkout Card
+                    binding.tvClockAttendance.text = formatTime(latestLog.login_time)
+                    binding.tvClockCheckout.text = formatTime(latestLog.logout_time ?: "N/A")
 
-            // Absence Card
-                val latestMonth = attendanceLogs.maxByOrNull { log ->
-                    parseDate(log.tanggal)?.time ?: 0
-                } ?.tanggal?.let { extractMonthYear(it) }
+                    // Absence Card
+                    val latestMonth = attendanceLogs.maxByOrNull { log ->
+                        parseDate(log.tanggal)?.time ?: 0
+                    }?.tanggal?.let { extractMonthYear(it) }
 
-                val filteredLogs = attendanceLogs.filter{ log ->
-                    extractMonthYear(log.tanggal) == latestMonth
+                    val filteredLogs = attendanceLogs.filter { log ->
+                        extractMonthYear(log.tanggal) == latestMonth
+                    }
+
+                    val totalAbsent = filteredLogs.count { log -> log.status_login == "absent" }
+                    binding.tvDaysAbsent.text = totalAbsent.toString()
+
+                    val currentMonth = latestLog.tanggal.let { extractMonth(it) }
+                    binding.tvMonthAbsent.text = currentMonth
+
+                    // Total Attended Card
+                    val totalAttended = filteredLogs.count {
+                        !it.status_login.isNullOrEmpty() && !it.status_logout.isNullOrEmpty()
+                    }
+
+                    binding.tvMonthTotalAttended.text = latestMonth ?: "-"
+                    binding.tvDaysTotalAttended.text = totalAttended.toString()
                 }
-
-                val totalAbsent = filteredLogs.count { log -> log.status_login == "absent"}
-                binding.tvDaysAbsent.text = totalAbsent.toString()
-
-                val currentMonth = latestLog.tanggal.let { extractMonth(it) }
-                binding.tvMonthAbsent.text = currentMonth
-
-            // Total Attended Card
-                val totalAttended = filteredLogs.count {
-                    it.status_login.isNotEmpty() && it.status_logout.isNotEmpty()
-                }
-
-                binding.tvMonthTotalAttended.text = latestMonth ?: "-"
-                binding.tvDaysTotalAttended.text  = totalAttended.toString()
             } else {
+                Log.e("HomeFragment", "Attendance logs are empty or null.")
                 binding.tvClockAttendance.text = "N/A"
                 binding.tvClockCheckout.text = "N/A"
             }
         }
     }
+
 
     private fun extractMonth(dateString: String): String {
         return try {

@@ -135,25 +135,28 @@ class AbsenceFragment : Fragment() {
             return
         }
 
-        lifecycleScope.launch {
-            try {
-                val location = fusedLocationClient.lastLocation.await()
+        val locationRequest = com.google.android.gms.location.LocationRequest.Builder(
+            com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY,
+            1000
+        ).build()
+
+        fusedLocationClient.requestLocationUpdates(locationRequest, object : com.google.android.gms.location.LocationCallback() {
+            override fun onLocationResult(locationResult: com.google.android.gms.location.LocationResult) {
+                val location = locationResult.lastLocation
                 if (location != null) {
                     CURRENT_LAT = location.latitude
                     CURRENT_LNG = location.longitude
-
-                    Log.d(TAG, "Lokasi saat ini: LAT=$CURRENT_LAT, LNG=$CURRENT_LNG")
-                    showToast("Lokasi kamu sekarang: LAT=$CURRENT_LAT, LNG=$CURRENT_LNG")
+                    Log.d(TAG, "Lokasi saat ini diperbarui: LAT=$CURRENT_LAT, LNG=$CURRENT_LNG")
+                    showToast("Lokasi saat ini: LAT=$CURRENT_LAT, LNG=$CURRENT_LNG")
+                    fusedLocationClient.removeLocationUpdates(this)
                 } else {
                     Log.e(TAG, "Gagal mendapatkan lokasi saat ini.")
-                    showToast("Gagal mendapatkan lokasi saat ini. Pastikan GPS aktif!")
+                    showToast("Gagal mendapatkan lokasi. Cek GPS Anda!")
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error mendapatkan lokasi: ${e.message}", e)
-                showToast("Error mendapatkan lokasi: ${e.message}")
             }
-        }
+        }, requireActivity().mainLooper)
     }
+
 
     private fun setDateToday() {
         val calendar = Calendar.getInstance()

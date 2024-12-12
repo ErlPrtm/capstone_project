@@ -18,9 +18,9 @@ import kotlinx.coroutines.launch
 import com.capstoneproject.aji.R
 import com.capstoneproject.aji.data.api.RetrofitInstance
 import com.capstoneproject.aji.viewmodel.HomeViewModel
+import kotlinx.coroutines.flow.firstOrNull
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 class AccountFragment : Fragment() {
 
@@ -47,123 +47,122 @@ class AccountFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun checkAuthenticationAndLoadData() {
         lifecycleScope.launch {
-            userPreferences.getToken().collect { token ->
-                if (!token.isNullOrEmpty()) {
-                    val fullname = userPreferences.getUserDetail("fullname").first() ?: "Pengguna"
-                    val email = userPreferences.getUserDetail("email").first() ?: "info@aji.com"
-                    val nip = userPreferences.getUserDetail("nip").first() ?: "123456789"
-                    val profileImageUrl =
-                        userPreferences.getUserDetail("profile_image").first() ?: ""
+            val token = userPreferences.getToken().first()
+            if (!token.isNullOrEmpty()) {
+                val fullname = userPreferences.getUserDetail("fullname").firstOrNull() ?: "Pengguna"
+                val email = userPreferences.getUserDetail("email").firstOrNull() ?: "info@aji.com"
+                val nip = userPreferences.getUserDetail("nip").firstOrNull() ?: "123456789"
+                val profileImageUrl =
+                    userPreferences.getUserDetail("profile_image").firstOrNull() ?: ""
 
-                    binding.tvWelcome.text = "Halo, $fullname"
-                    binding.tvUsername.text = fullname
-                    binding.tvEmail.text = email
-                    binding.tvNip.text = "NIP $nip"
+                binding.tvWelcome.text = "Halo, $fullname"
+                binding.tvUsername.text = fullname
+                binding.tvEmail.text = email
+                binding.tvNip.text = "NIP $nip"
 
-                    Glide.with(this@AccountFragment)
-                        .load(profileImageUrl)
-                        .placeholder(R.drawable.placeholder_image)
-                        .error(R.drawable.error_image)
-                        .into(binding.ivAccountProfile)
-                } else {
-                    redirectToLogin()
-                }
+                Glide.with(this@AccountFragment)
+                    .load(profileImageUrl)
+                    .placeholder(R.drawable.placeholder_image)
+                    .error(R.drawable.error_image)
+                    .into(binding.ivAccountProfile)
+            } else {
+                redirectToLogin()
             }
         }
     }
-
     private fun fetchAttendanceLogs() {
         lifecycleScope.launch {
-            userPreferences.getUserId()
-                .collect { userId ->
-                    if(userId != null) {
-                        homeViewModel.fetchAttendanceLogs(userId)
-                    } else {
-                        Log.e("HomeFragment", "User id is null")
-                    }
+            val userId = userPreferences.getUserId().first()
+            if (userId != null) {
+                try {
+                    homeViewModel.fetchAttendanceLogs(userId)
+                } catch (e: Exception) {
+                    Log.e("AccountFragment", "Error fetching attendance logs: ${e.message}")
                 }
+            } else {
+                Log.e("AccountFragment", "User ID is null or empty.")
+            }
         }
     }
 
     private fun observeAttendanceLogs() {
         homeViewModel.attendanceLog.observe(viewLifecycleOwner) { attendanceLogs ->
-            val latestLog = attendanceLogs?.lastOrNull()
+            if (!attendanceLogs.isNullOrEmpty()) {
+                val latestLog = attendanceLogs.lastOrNull()
 
-            if(latestLog != null) {
-                // Absence Card
-                val latestMonth = attendanceLogs.maxByOrNull { log ->
-                    parseDate(log.tanggal)?.time ?: 0
-                } ?.tanggal?.let { extractMonthYear(it) }
+                if (latestLog != null) {
+                    val latestMonth = attendanceLogs.maxByOrNull { log ->
+                        parseDate(log.tanggal)?.time ?: 0
+                    }?.tanggal?.let { extractMonthYear(it) }
 
-                val filteredLogs = attendanceLogs.filter{ log ->
-                    extractMonthYear(log.tanggal) == latestMonth
+                    val filteredLogs = attendanceLogs.filter { log ->
+                        extractMonthYear(log.tanggal) == latestMonth
+                    }
+
+                    val totalAbsent = filteredLogs.count { log -> log.status_login == "absent" }
+                    binding.tvDaysAbsent.text = totalAbsent.toString()
+
+                    val currentMonth = latestLog.tanggal.let { extractMonth(it) }
+                    binding.tvMonthAbsent.text = currentMonth
+
+                    val totalAttended = filteredLogs.count {
+                        !it.status_login.isNullOrEmpty() && !it.status_logout.isNullOrEmpty()
+                    }
+
+                    binding.tvMonthTotalAttended.text = latestMonth ?: "-"
+                    binding.tvDaysTotalAttended.text = totalAttended.toString()
                 }
-
-                val totalAbsent = filteredLogs.count { log -> log.status_login == "absent"}
-                binding.tvDaysAbsent.text = totalAbsent.toString()
-
-                val currentMonth = latestLog.tanggal.let { extractMonth(it) }
-                binding.tvMonthAbsent.text = currentMonth
-
-                // Total Attended Card
-                val totalAttended = filteredLogs.count {
-                    it.status_login.isNotEmpty() && it.status_logout.isNotEmpty()
-                }
-
-                binding.tvMonthTotalAttended.text = latestMonth ?: "-"
-                binding.tvDaysTotalAttended.text  = totalAttended.toString()
             } else {
+                Log.e("AccountFragment", "Attendance logs are empty or null.")
                 binding.tvDaysAbsent.text = "N/A"
                 binding.tvDaysTotalAttended.text = "N/A"
             }
         }
     }
 
-    private fun extractMonth(dateString: String): String {
+    private fun extractMonth(dateString: String?): String {
         return try {
-            val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(dateString)
-            date?.let {
-                SimpleDateFormat("MMMM", Locale.getDefault()).format(it)
-            } ?: "N/A"
+            if (!dateString.isNullOrEmpty()) {
+                val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault())
+                    .parse(dateString)
+                date?.let {
+                    SimpleDateFormat("MMMM", Locale.getDefault()).format(it)
+                } ?: "N/A"
+            } else {
+                "N/A"
+            }
         } catch (e: Exception) {
-            Log.e("AccountFragment", "Error exctracting month : ${e.message}")
+            Log.e("AccountFragment", "Error extracting month: ${e.message}")
             "N/A"
         }
     }
 
-    private fun extractMonthYear(dateString: String): String {
+    private fun extractMonthYear(dateString: String?): String {
         return try {
-            val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(dateString)
-            date?.let {
-                SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(it)
-            } ?: "-"
-        } catch (e: Exception) {
-            Log.e("AccountFragment", "Error extracting month year : ${e.message}")
-            "-"
-        }
-    }
-
-    private fun formatTime(timeString: String): String {
-        return if (!timeString.isNullOrEmpty()) {
-            try {
-                val time = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(timeString)
-                time?.let {
-                    SimpleDateFormat("HH:mm", Locale.getDefault()).format(it)
+            if (!dateString.isNullOrEmpty()) {
+                val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault())
+                    .parse(dateString)
+                date?.let {
+                    SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(it)
                 } ?: "-"
-            } catch (e: Exception) {
-                Log.e("AccountFragment", "Error formatting time ${e.message}")
+            } else {
                 "-"
             }
-        } else {
+        } catch (e: Exception) {
+            Log.e("AccountFragment", "Error extracting month year: ${e.message}")
             "-"
         }
     }
 
-    private fun parseDate(dateString: String): Date? {
+    private fun parseDate(dateString: String?): Date? {
         return try {
-            SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(dateString)
+            if (!dateString.isNullOrEmpty()) {
+                SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(dateString)
+            } else {
+                null
+            }
         } catch (e: Exception) {
-            Log.e("AccountFragment", "Error parsing date ${e.message}")
+            Log.e("AccountFragment", "Error parsing date: ${e.message}")
             null
         }
     }
