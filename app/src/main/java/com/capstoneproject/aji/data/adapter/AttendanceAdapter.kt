@@ -10,6 +10,7 @@ import com.capstoneproject.aji.data.model.AttendanceLog
 import com.capstoneproject.aji.databinding.AttendanceHistoryTableBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.TimeZone
 import java.util.concurrent.TimeUnit
 
 class AttendanceAdapter : RecyclerView.Adapter<AttendanceAdapter.AttendanceViewHolder>() {
@@ -32,7 +33,8 @@ class AttendanceAdapter : RecyclerView.Adapter<AttendanceAdapter.AttendanceViewH
     }
 
     override fun onBindViewHolder(holder: AttendanceViewHolder, position: Int) {
-        val attendanceHistory = attendanceLogs[position]
+        val latestAttendanceLog = attendanceLogs.sortedByDescending { it.log_id }
+        val attendanceHistory = latestAttendanceLog[position]
 
         holder.bind(attendanceHistory)
     }
@@ -42,10 +44,11 @@ class AttendanceAdapter : RecyclerView.Adapter<AttendanceAdapter.AttendanceViewH
     class AttendanceViewHolder(private val binding: AttendanceHistoryTableBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        private val dateFormat = SimpleDateFormat("EEE, \ndd MMM yyyy", Locale.getDefault())
-        private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        private val dateFormat = SimpleDateFormat("EEE, \ndd MMM yyyy", Locale.US)
+        private val timeFormat = SimpleDateFormat("HH:mm", Locale.US)
 
         fun bind(attendanceLog: AttendanceLog) {
+
             binding.tvDate.text = formatDate(attendanceLog.tanggal)
             binding.tvAttendance.text = formatTime(attendanceLog.login_time)
             binding.tvCheckout.text = formatTime(attendanceLog.logout_time) ?: "N/A"
@@ -54,7 +57,12 @@ class AttendanceAdapter : RecyclerView.Adapter<AttendanceAdapter.AttendanceViewH
 
         private fun formatDate(dateString: String): String {
             return try {
-                val date = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(dateString)
+                val inputFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
+                inputFormat.timeZone = TimeZone.getTimeZone("GMT")
+                val date = inputFormat.parse(dateString)
+
+                dateFormat.timeZone = TimeZone.getTimeZone("GMT")
+
                 date?.let {
                     dateFormat.format(it)
                 } ?: dateString
@@ -67,7 +75,11 @@ class AttendanceAdapter : RecyclerView.Adapter<AttendanceAdapter.AttendanceViewH
         private fun formatTime(timeString: String?): String? {
             return if (!timeString.isNullOrEmpty()) {
                 try {
-                    val time = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(timeString)
+                    val inputFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
+                    inputFormat.timeZone = TimeZone.getTimeZone("GMT")
+                    val time = inputFormat.parse(timeString)
+
+                    timeFormat.timeZone = TimeZone.getTimeZone("GMT")
                     time?.let {
                         timeFormat.format(it)
                     }

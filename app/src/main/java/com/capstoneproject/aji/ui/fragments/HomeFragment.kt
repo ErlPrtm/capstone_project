@@ -196,9 +196,15 @@ class HomeFragment : Fragment() {
     private fun formatTime(timeString: String): String {
         return if (!timeString.isNullOrEmpty()) {
             try {
-                val time = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.getDefault()).parse(timeString)
+                val inputFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US)
+                inputFormat.timeZone = TimeZone.getTimeZone("GMT")
+                val time = inputFormat.parse(timeString)
+
+                val outputFormat = SimpleDateFormat("HH:mm", Locale.US)
+                outputFormat.timeZone = TimeZone.getTimeZone("GMT")
+
                 time?.let {
-                    SimpleDateFormat("HH:mm", Locale.getDefault()).format(it)
+                    outputFormat.format(it)
                 } ?: "-"
             } catch (e: Exception) {
                 Log.e("HomeFragment", "Error formatting time ${e.message}")
