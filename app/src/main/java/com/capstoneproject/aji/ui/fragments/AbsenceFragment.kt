@@ -290,6 +290,7 @@ class AbsenceFragment : Fragment() {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private fun isUserInTargetLocation(
         userLocation: Location,
         targetLat: Double,
@@ -302,7 +303,8 @@ class AbsenceFragment : Fragment() {
         }
 
         val distance = userLocation.distanceTo(targetLocation)
-        Log.d(TAG, "Jarak ke lokasi target: $distance meter.")
+        val formattedDistance = String.format("%.0f", distance)
+        Log.d(TAG, "Jarak ke lokasi target: $formattedDistance meter.")
         return distance <= radiusInMeters
     }
 
