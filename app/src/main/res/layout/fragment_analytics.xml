@@ -87,7 +87,7 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_margin="8dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginTop="32dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -104,6 +104,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:textSize="8pt"
+                            android:fontFamily="@font/poppins_regular"
                             android:text="@string/fee" />
 
                         <TextView
@@ -112,8 +114,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_weight="1"
-                            android:gravity="end"
-                            android:text="@string/fee" />
+                            android:textSize="8pt"
+                            android:fontFamily="@font/poppins_regular"
+                            android:gravity="end"/>
                     </TableRow>
 
                     <TableRow
@@ -129,6 +132,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:textSize="8pt"
+                            android:fontFamily="@font/poppins_regular"
                             android:text="@string/late" />
 
                         <TextView
@@ -137,8 +142,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_weight="1"
-                            android:gravity="end"
-                            android:text="@string/potongan" />
+                            android:textSize="8pt"
+                            android:fontFamily="@font/poppins_regular"
+                            android:gravity="end" />
                     </TableRow>
 
                     <TableRow
@@ -154,7 +160,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/absent_placeholder" />
+                            android:textSize="8pt"
+                            android:fontFamily="@font/poppins_regular"
+                            android:text="@string/tidakHadir" />
 
                         <TextView
                             android:id="@+id/tvAbsentMoney"
@@ -162,8 +170,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_weight="1"
-                            android:gravity="end"
-                            android:text="@string/potongan" />
+                            android:textSize="8pt"
+                            android:fontFamily="@font/poppins_regular"
+                            android:gravity="end"/>
                     </TableRow>
 
                     <TableRow
@@ -179,6 +188,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:textSize="8pt"
+                            android:fontFamily="@font/poppins_regular"
                             android:text="@string/overtime" />
 
                         <TextView
@@ -187,8 +198,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_weight="1"
-                            android:gravity="end"
-                            android:text="@string/potongan" />
+                            android:textSize="8pt"
+                            android:fontFamily="@font/poppins_regular"
+                            android:gravity="end" />
                     </TableRow>
 
                     <TableRow
@@ -202,6 +214,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:textSize="8pt"
+                            android:fontFamily="@font/poppins_bold"
                             android:text="@string/accumulated_fee" />
 
                         <TextView
@@ -210,8 +224,9 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_weight="1"
+                            android:textSize="8pt"
                             android:gravity="end"
-                            android:text="@string/accumulated_fee" />
+                            android:fontFamily="@font/poppins_bold"/>
                     </TableRow>
                 </TableLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

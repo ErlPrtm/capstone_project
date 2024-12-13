@@ -74,10 +74,10 @@
     <string name="logged_out_message">Anda telah keluar</string>
     <string name="bottom_navbar">Bottom Navbar</string>
     <string name="email_username">username@gmail.com</string>
-    <string name="save_attendance">Save Attendance</string>
+    <string name="save_attendance">Simpah Absen</string>
     <string name="preview_selfie">Preview Selfie</string>
-    <string name="attendance_history">Attendance History</string>
-    <string name="title_analytics_fragment">Analytics For</string>
+    <string name="attendance_history">Riwayat Kehadiran</string>
+    <string name="title_analytics_fragment">Analisis Absensi Untuk</string>
     <string name="branding">Bersama aji, Gaji aman terkendali</string>
     <string name="employee_list">Daftar Pegawai</string>
     <string name="camera_button_placeholder">Go to Camera</string>
@@ -85,10 +85,11 @@
     <string name="button_capture">Ambil swafoto</string>
     <string name="table_histori_kehadiran">Table Histori Kehadiran</string>
     <string name="scroll_analytics">Scroll analytics</string>
-    <string name="fee">Fee</string>
-    <string name="late">Late</string>
+    <string name="fee">Insentif</string>
+    <string name="late">Terlambat</string>
     <string name="potongan">Potongan</string>
-    <string name="overtime">Overtime</string>
-    <string name="accumulated_fee">Accumulated Fee</string>
-    <string name="gallery_placeholder">Gallery</string>
+    <string name="tidakHadir">Tidak Hadir</string>
+    <string name="overtime">Lembur</string>
+    <string name="accumulated_fee">Total Pembayaran Gaji</string>
+    <string name="gallery_placeholder">Galeri</string>
 </resources>

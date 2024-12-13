@@ -12,6 +12,7 @@ import com.capstoneproject.aji.data.model.SalaryParameterResponse
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class AnalyticsViewModel(
     private val apiService: ApiService,
@@ -20,15 +21,19 @@ class AnalyticsViewModel(
     private val _salaryParameters = MutableLiveData<List<SalaryData>>()
     val salaryParameters: LiveData<List<SalaryData>> get() = _salaryParameters
 
-    fun fetchSalaryParameter(token: String, parameterId: Int ?= null) {
+    fun fetchSalaryParameter(token: String, parameterId: Int? = null) {
         viewModelScope.launch {
             try {
+                Log.d("AnalyticsViewModel", "Fetching salary parameters with token: $token, parameterId: $parameterId")
                 val response = apiService.getSalaryParameter(token, parameterId)
-
                 _salaryParameters.postValue(listOf(response.data))
-            } catch(e: Exception) {
-                Log.e("AnalyticsViewModel", "Failed to fetch salary parameters", e)
+            } catch (e: HttpException) {
+                val errorBody = e.response()?.errorBody()?.string()
+                Log.e("AnalyticsViewModel", "HTTP error: ${e.code()}, $errorBody", e)
+            } catch (e: Exception) {
+                Log.e("AnalyticsViewModel", "Unexpected error", e)
             }
         }
     }
+
 }

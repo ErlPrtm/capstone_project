@@ -159,7 +159,7 @@ class AbsenceFragment : Fragment() {
                     CURRENT_LAT = location.latitude
                     CURRENT_LNG = location.longitude
                     Log.d(TAG, "Lokasi saat ini diperbarui: LAT=$CURRENT_LAT, LNG=$CURRENT_LNG")
-                    showToast("Lokasi saat ini: LAT=$CURRENT_LAT, LNG=$CURRENT_LNG")
+//                    showToast("Lokasi saat ini: LAT=$CURRENT_LAT, LNG=$CURRENT_LNG")
                     fusedLocationClient.removeLocationUpdates(this)
                 } else {
                     Log.e(TAG, "Gagal mendapatkan lokasi saat ini.")
