@@ -73,11 +73,16 @@ class SettingsFragment : Fragment() {
     private fun performLogout() {
         lifecycleScope.launch {
             val statusAbsence = userPreferences.getStatusAbsence().firstOrNull()
+            val lastAbsenceDate = userPreferences.getLastAbsenceData().firstOrNull()
 
             userPreferences.clear()
 
             if(!statusAbsence.isNullOrEmpty()) {
                 userPreferences.setStatusAbsence(statusAbsence)
+            }
+
+            if(!lastAbsenceDate.isNullOrEmpty()) {
+                userPreferences.setLastAbsenceData(lastAbsenceDate)
             }
 
             val intent = Intent(requireContext(), LoginActivity::class.java).apply {

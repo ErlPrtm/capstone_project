@@ -27,11 +27,14 @@ import com.capstoneproject.aji.ui.camera.CameraActivity
 import com.capstoneproject.aji.ui.camera.CameraActivity.Companion.CAMERAX_RESULT
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 import kotlin.reflect.jvm.internal.impl.metadata.ProtoBuf.Visibility
 
@@ -193,8 +196,12 @@ class AbsenceFragment : Fragment() {
     private fun checkLoginStatus() {
         lifecycleScope.launch {
             val isLoggedIn = userPreferences.getStatusAbsence().firstOrNull()
+            Log.d("AnalyticsFragment", "isloggedin : $isLoggedIn")
 
             if(isLoggedIn.isNullOrEmpty()) {
+                binding.btnSave.visibility = View.VISIBLE
+                binding.btnCheckout.visibility = View.GONE
+            } else if (isLoggedIn == "checked_out") {
                 binding.btnSave.visibility = View.VISIBLE
                 binding.btnCheckout.visibility = View.GONE
             } else {
@@ -249,6 +256,24 @@ class AbsenceFragment : Fragment() {
         }
     }
 
+    private fun getTodayDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        return dateFormat.format(Date())
+    }
+
+    private suspend fun canPerformAction(userPreferences: UserPreferences, action: String) : Boolean {
+        val todayDate = getTodayDate()
+        val lastDate = userPreferences.getLastAbsenceData().firstOrNull()
+        val statusAbsence = userPreferences.getStatusAbsence().firstOrNull()
+        Log.d(TAG, "canPerformAction: Action = $action, todayDate = $todayDate, lastDate= $lastDate, statusAbsence=$statusAbsence")
+
+        return when (action) {
+            "absence" -> lastDate != todayDate
+            "checkout" -> lastDate == todayDate && statusAbsence == "absence"
+            else -> false
+        }
+    }
+
     private fun saveAttendance() {
         lifecycleScope.launch {
             try {
@@ -296,26 +321,42 @@ class AbsenceFragment : Fragment() {
                     return@launch
                 }
 
-                attendanceViewModel.absen(
-                    token = token,
-                    userId = userId,
-                    fotoFile = file,
-                    onSuccess = { response ->
-                        Log.d(TAG, "Absensi berhasil: ${response.message}")
-                        showToast("Yeay! Absensi berhasil: ${response.message}")
-
-                        binding.btnSave.visibility = View.GONE
-                        binding.btnCheckout.visibility = View.VISIBLE
-
-                        lifecycleScope.launch {
-                            userPreferences.setStatusAbsence("absence")
-                        }
-                    },
-                    onError = { error ->
-                        Log.e(TAG, "Gagal absensi: $error")
-                        showToast("Aduh! Absensi gagal: $error")
+                if(canPerformAction(userPreferences, "absence")) {
+                    if(userPreferences.getStatusAbsence().firstOrNull() == "checked_out") {
+                        showToast("Anda sudah absence dan checkout hari ini. Selamat beristirahat!")
+                        return@launch
                     }
-                )
+
+                    binding.btnSave.isEnabled = false
+                    attendanceViewModel.absen(
+                        token = token,
+                        userId = userId,
+                        fotoFile = file,
+                        onSuccess = { response ->
+                            Log.d(TAG, "Absensi berhasil: ${response.message}")
+                            showToast("Yeay! Absensi berhasil: ${response.message}")
+
+                            lifecycleScope.launch {
+                                userPreferences.setStatusAbsence("absence")
+                                userPreferences.setLastAbsenceData(getTodayDate())
+                                delay(100)
+
+                                val updatedStatus = userPreferences.getStatusAbsence().firstOrNull()
+                                val updatedDate = userPreferences.getLastAbsenceData().firstOrNull()
+                                Log.d(TAG, "Updated Preferences: statusAbsence=$updatedStatus, lastDate=$updatedDate")
+
+                                binding.btnSave.visibility = View.GONE
+                                binding.btnCheckout.visibility = View.VISIBLE
+                            }
+                        },
+                        onError = { error ->
+                            Log.e(TAG, "Gagal absensi: $error")
+                            showToast("Aduh! Absensi gagal: $error")
+                        }
+                    )
+                } else {
+                    showToast("Absence can be only done once per day!")
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "Error absensi: ${e.message}", e)
                 showToast("Ups! Ada error: ${e.message ?: "Tidak diketahui"}")
@@ -325,37 +366,53 @@ class AbsenceFragment : Fragment() {
 
     private fun checkout() {
         lifecycleScope.launch {
-            try {
-                val token = userPreferences.getToken().firstOrNull()
-                val userId = userPreferences.getUserId().firstOrNull()
+            if(canPerformAction(userPreferences, "checkout")) {
+                try {
+                    val token = userPreferences.getToken().firstOrNull()
+                    val userId = userPreferences.getUserId().firstOrNull()
 
-                if(token == null || userId == null) {
-                    showToast("User id atau token tidak ditemukan. Pastikan anda sudah login")
-                    return@launch
-                }
-
-                attendanceViewModel.checkout(
-                    token = token,
-                    userId = userId,
-                    onSuccess =  { response ->
-                        Log.d(TAG, "Checkout Berhasil: ${response.message}")
-                        showToast("Checkout Berhasil: ${response.message}")
-
-                        binding.btnCheckout.visibility = View.GONE
-                        binding.btnSave.visibility = View.VISIBLE
-
-                        lifecycleScope.launch {
-                            userPreferences.setStatusAbsence("")
-                        }
-                    },
-                    onError = { error ->
-                        Log.e(TAG, "Checkout gagal: $error")
-                        showToast("Checkout gagal: $error")
+                    if(token == null || userId == null) {
+                        showToast("User id atau token tidak ditemukan. Pastikan anda sudah login")
+                        return@launch
                     }
-                )
-            } catch (e: Exception) {
-                Log.e(TAG, "Error saat checkout: ${e.message}")
-                showToast("Error saat checkout: ${e.message}")
+
+                    if(canPerformAction(userPreferences, "checkout")) {
+                        binding.btnSave.isEnabled = false
+                        binding.btnCheckout.isEnabled = false
+                        attendanceViewModel.checkout(
+                            token = token,
+                            userId = userId,
+                            onSuccess =  { response ->
+                                Log.d(TAG, "Checkout Berhasil: ${response.message}")
+                                showToast("Checkout Berhasil: ${response.message}")
+
+                                lifecycleScope.launch {
+                                    userPreferences.setStatusAbsence("checked_out")
+                                    userPreferences.setLastAbsenceData(getTodayDate())
+                                    delay(100)
+
+                                    val updatedStatus = userPreferences.getStatusAbsence().firstOrNull()
+                                    val updatedDate = userPreferences.getLastAbsenceData().firstOrNull()
+                                    Log.d(TAG, "Updated Preferences after Checkout: statusAbsence=$updatedStatus, lastDate=$updatedDate")
+
+                                    binding.btnCheckout.visibility = View.GONE
+                                    binding.btnSave.visibility = View.VISIBLE
+                                    binding.btnSave.isEnabled = true
+                                }
+                            },
+                            onError = { error ->
+                                Log.e(TAG, "Checkout gagal: $error")
+                                showToast("Checkout gagal: $error")
+                            }
+                        )
+                    } else {
+                        Log.e(TAG, "Checkout gagal karena kondisi perform tidak sesuai")
+                        showToast("Checkout gagal karena kondisi perform action tidak sesuai")
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error saat checkout: ${e.message}")
+                    showToast("Error saat checkout: ${e.message}")
+                }
             }
         }
     }

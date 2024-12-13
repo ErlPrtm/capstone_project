@@ -147,7 +147,7 @@ class AnalyticsFragment : Fragment() {
 
         return when (status) {
             "late" -> count * salaryData.telat
-            "absen" -> count * salaryData.absen
+            "absent" -> count * salaryData.absen
             else -> 0.0
         }
     }
@@ -185,7 +185,7 @@ class AnalyticsFragment : Fragment() {
                 homeViewModel.attendanceLog.observe(viewLifecycleOwner) { attendanceLogs ->
                     if(!attendanceLogs.isNullOrEmpty()) {
                         val lateCut = calculateCuts(filteredLogs = attendanceLogs, salaryData = salaryData, status = "late")
-                        val absenCut = calculateCuts(filteredLogs = attendanceLogs, salaryData = salaryData, status = "absen")
+                        val absenCut = calculateCuts(filteredLogs = attendanceLogs, salaryData = salaryData, status = "absent")
                         val overtimeFee = calculateOvertimePayment(filteredLogs = attendanceLogs, salaryData = salaryData)
 
                         binding.tvFeeMoney.text = formatToCurrency(salaryData.insentif)

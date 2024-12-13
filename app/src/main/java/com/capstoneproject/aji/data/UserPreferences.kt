@@ -22,6 +22,7 @@ class UserPreferences(context: Context) {
         private val ROLE_KEY = stringPreferencesKey("role")
         private val USER_ID_KEY = intPreferencesKey("user_id")
         private val STATUS_ABSENCE_KEY = stringPreferencesKey("status_absence")
+        private val LAST_ABSENCE_DATE_KEY = stringPreferencesKey("last_absence_date")
         private val USER_DETAILS_PREFIX = "user_detail_"
     }
 
@@ -69,6 +70,17 @@ class UserPreferences(context: Context) {
     suspend fun setStatusAbsence(status: String) {
         dataStore.edit { preferences ->
             preferences[STATUS_ABSENCE_KEY] = status
+        }
+    }
+
+    fun getLastAbsenceData(): Flow<String?> {
+        return dataStore.data
+            .map { preferences -> preferences[LAST_ABSENCE_DATE_KEY] }
+    }
+
+    suspend fun setLastAbsenceData(date: String) {
+        dataStore.edit { preferences ->
+            preferences[LAST_ABSENCE_DATE_KEY] = date
         }
     }
 

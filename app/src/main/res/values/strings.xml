@@ -74,7 +74,7 @@
     <string name="logged_out_message">Anda telah keluar</string>
     <string name="bottom_navbar">Bottom Navbar</string>
     <string name="email_username">username@gmail.com</string>
-    <string name="save_attendance">Simpah Absen</string>
+    <string name="save_attendance">Simpan Absen</string>
     <string name="preview_selfie">Preview Selfie</string>
     <string name="attendance_history">Riwayat Kehadiran</string>
     <string name="title_analytics_fragment">Analisis Absensi Untuk</string>
