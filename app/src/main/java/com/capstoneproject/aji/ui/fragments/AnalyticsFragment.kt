@@ -45,7 +45,7 @@ class AnalyticsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAnalyticsBinding.inflate(inflater, container, false)
         userPreferences = UserPreferences(requireContext())
         homeViewModel = HomeViewModel(RetrofitInstance.api, userPreferences)
@@ -94,7 +94,7 @@ class AnalyticsFragment : Fragment() {
     private fun observeAttendanceData() {
         homeViewModel.attendanceLog.observe(viewLifecycleOwner) { attendanceLogs ->
             if(!attendanceLogs.isNullOrEmpty()) {
-                Log.d("AnalyticsFragment", "Data listing, attendanceLogs $attendanceLogs")
+//                Log.d("AnalyticsFragment", "Data listing, attendanceLogs $attendanceLogs")
                 dataListing(attendanceLogs)
             } else {
                 Log.e("AnalyticsFragment", "No Attendance Data Available")
@@ -118,6 +118,62 @@ class AnalyticsFragment : Fragment() {
         }
     }
 
+    private fun getTodayDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+
+        val today = dateFormat.format(Date())
+        Log.d("AnalyticsFragment", "getToday date : $today")
+        return today
+    }
+
+    private fun calculateCuts(filteredLogs: List<AttendanceLog>? = null, salaryData: SalaryData, status: String) : Double {
+        val today = getTodayDate()
+
+        val todayLog = filteredLogs?.filter {
+            val logDate = try {
+                val logDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+                val parsedDate = logDateFormat.format(SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).parse(it.tanggal)!!)
+//                Log.d("AnalyticsFragment", "Parsed Log Date from cuts: $parsedDate, Today: $today")
+                parsedDate == today
+            } catch (e: Exception) {
+                false
+            }
+
+            logDate && it.status_login == status
+        } ?: emptyList()
+
+        val count = todayLog.size
+        Log.d("AnalyticsFragment", "count : $count")
+
+        return when (status) {
+            "late" -> count * salaryData.telat
+            "absen" -> count * salaryData.absen
+            else -> 0.0
+        }
+    }
+
+    private fun calculateOvertimePayment(filteredLogs: List<AttendanceLog>? = null, salaryData: SalaryData) : Double {
+        val today = getTodayDate()
+
+        val todayOvertimeLog = filteredLogs?.filter {
+            val logDate = try {
+                val logDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+                val parsedDate = logDateFormat.format(SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).parse(it.tanggal)!!)
+//                Log.d("AnalyticsFragment", "Parsed Log Date from overtime: $parsedDate, Today: $today")
+                parsedDate == today
+            } catch (e: Exception) {
+                false
+            }
+
+            logDate && it.status_logout == "overtime"
+        } ?: emptyList()
+
+        val overtimeCount = todayOvertimeLog.size
+        Log.d("AnalyticsFragment", "overtimeCount : $overtimeCount")
+
+        return overtimeCount * salaryData.lembur
+    }
+
     @SuppressLint("SetTextI18n")
     private fun observePaymentParameter() {
         analyticsViewModel.salaryParameters.observe(viewLifecycleOwner) { paymentParameter ->
@@ -125,14 +181,32 @@ class AnalyticsFragment : Fragment() {
 //                Log.d("AnalyticsFragment", "Data listing payment parameter $paymentParameter")
 
                 val salaryData = paymentParameter.first()
-                binding.tvFeeMoney.text = formatToCurrency(salaryData.insentif)
-                binding.tvLateMoney.text = formatToCurrency(salaryData.telat)
-                binding.tvAbsentMoney.text = formatToCurrency(salaryData.absen)
-                binding.tvOvertimeMoney.text = formatToCurrency(salaryData.lembur)
 
-                val accumulatedFee = calculateAccumulatedFee(salaryData)
-                Log.d("Analyticsfragment", "Accumulated Fee : $accumulatedFee")
-                binding.tvAccumulatedMoney.text = formatToCurrency(accumulatedFee.toDouble())
+                homeViewModel.attendanceLog.observe(viewLifecycleOwner) { attendanceLogs ->
+                    if(!attendanceLogs.isNullOrEmpty()) {
+                        val lateCut = calculateCuts(filteredLogs = attendanceLogs, salaryData = salaryData, status = "late")
+                        val absenCut = calculateCuts(filteredLogs = attendanceLogs, salaryData = salaryData, status = "absen")
+                        val overtimeFee = calculateOvertimePayment(filteredLogs = attendanceLogs, salaryData = salaryData)
+
+                        binding.tvFeeMoney.text = formatToCurrency(salaryData.insentif)
+
+                        binding.tvLateMoney.text = formatToCurrency(lateCut)
+                        binding.tvAbsentMoney.text = formatToCurrency(absenCut)
+                        binding.tvOvertimeMoney.text = formatToCurrency(overtimeFee)
+
+                        val accumulatedFee = calculateAccumulatedFee(
+                            salaryData.insentif,
+                            overtimeFee,
+                            lateCut,
+                            absenCut
+                        )
+
+                        Log.d("Analyticsfragment", "Accumulated Fee : $accumulatedFee")
+                        binding.tvAccumulatedMoney.text = formatToCurrency(accumulatedFee)
+                    } else {
+                        Log.e("AnalyticsFragment", "No attendance logs available")
+                    }
+                }
             } else {
                 Log.e("Analyticsfragment", "No salary parameters available")
             }
@@ -147,13 +221,14 @@ class AnalyticsFragment : Fragment() {
         return numberFormat.format(amount)
     }
 
-    private fun calculateAccumulatedFee(salaryData: SalaryData): Int {
-        val absen = salaryData.absen.toInt()
-        val telat = salaryData.telat.toInt()
-        val lembur = salaryData.lembur.toInt()
-        val insentif = salaryData.insentif.toInt()
+    private fun calculateAccumulatedFee(
+        insentif: Double,
+        overtimeFee: Double,
+        lateCut: Double,
+        absentCut: Double
+        ): Double {
 
-        return (insentif + lembur) - (absen + telat)
+        return (insentif + overtimeFee) - (lateCut + absentCut)
     }
 
 
