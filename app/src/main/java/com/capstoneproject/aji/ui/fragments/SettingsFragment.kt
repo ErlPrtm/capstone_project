@@ -2,6 +2,7 @@ package com.capstoneproject.aji.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
@@ -9,17 +10,23 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.capstoneproject.aji.R
 import com.capstoneproject.aji.data.UserPreferences
+import com.capstoneproject.aji.data.api.RetrofitInstance
 import com.capstoneproject.aji.databinding.FragmentSettingsBinding
 import com.capstoneproject.aji.ui.login.LoginActivity
 import com.capstoneproject.aji.ui.pegawai.PegawaiActivity
+import com.capstoneproject.aji.viewmodel.HomeViewModel
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class SettingsFragment : Fragment() {
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private lateinit var userPreferences: UserPreferences
+    private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: android.view.LayoutInflater, container: android.view.ViewGroup?,
@@ -27,6 +34,7 @@ class SettingsFragment : Fragment() {
     ): android.view.View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         userPreferences = UserPreferences(requireContext())
+        homeViewModel = HomeViewModel(RetrofitInstance.api, userPreferences)
 
         setupListeners()
         setupInitialStates()
@@ -72,13 +80,17 @@ class SettingsFragment : Fragment() {
 
     private fun performLogout() {
         lifecycleScope.launch {
+            val todayDate = getTodayDate()
             val statusAbsence = userPreferences.getStatusAbsence().firstOrNull()
             val lastAbsenceDate = userPreferences.getLastAbsenceData().firstOrNull()
 
             userPreferences.clear()
 
-            if(!statusAbsence.isNullOrEmpty()) {
+            if(!statusAbsence.isNullOrEmpty() && lastAbsenceDate == todayDate) {
                 userPreferences.setStatusAbsence(statusAbsence)
+                userPreferences.setLastAbsenceData(lastAbsenceDate)
+            } else {
+                userPreferences.setStatusAbsence("")
             }
 
             if(!lastAbsenceDate.isNullOrEmpty()) {
@@ -91,6 +103,11 @@ class SettingsFragment : Fragment() {
             startActivity(intent)
             Toast.makeText(requireContext(), getString(R.string.logged_out_message), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun getTodayDate(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        return dateFormat.format(Date())
     }
 
     override fun onDestroyView() {

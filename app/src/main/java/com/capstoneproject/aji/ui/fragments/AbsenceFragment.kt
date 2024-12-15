@@ -67,6 +67,11 @@ class AbsenceFragment : Fragment() {
         private const val TARGET_LNG = 106.8407917
         private const val RADIUS_METERS = 50f
 
+        // Lokasi Affa
+//        private const val TARGET_LAT = -7.313962188456129
+//        private const val TARGET_LNG = 112.73998182209083
+//        private const val RADIUS_METERS = 50f
+
         // Variabel untuk menyimpan lokasi pengguna
         private var CURRENT_LAT: Double? = null
         private var CURRENT_LNG: Double? = null
@@ -322,7 +327,7 @@ class AbsenceFragment : Fragment() {
                 }
 
                 if(canPerformAction(userPreferences, "absence")) {
-                    if(userPreferences.getStatusAbsence().firstOrNull() == "checked_out") {
+                    if(userPreferences.getStatusAbsence().firstOrNull() == "checked_out" && userPreferences.getLastAbsenceData().firstOrNull() == getTodayDate()) {
                         showToast("Anda sudah absence dan checkout hari ini. Selamat beristirahat!")
                         return@launch
                     }

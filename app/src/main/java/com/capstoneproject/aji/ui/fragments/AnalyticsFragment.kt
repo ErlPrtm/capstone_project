@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.capstoneproject.aji.data.UserPreferences
@@ -27,11 +28,12 @@ import com.github.mikephil.charting.utils.ColorTemplate
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-import okhttp3.internal.format
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 class AnalyticsFragment : Fragment() {
     private var _binding: FragmentAnalyticsBinding? = null
@@ -40,7 +42,7 @@ class AnalyticsFragment : Fragment() {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var analyticsViewModel: AnalyticsViewModel
 
-    val paymentParameter = ArrayList<BarEntry>()
+    private val paymentParameter = ArrayList<BarEntry>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -106,15 +108,25 @@ class AnalyticsFragment : Fragment() {
         lifecycleScope.launch {
             val rawToken = userPreferences.getToken().firstOrNull()
             val token = if(rawToken.isNullOrBlank()) null else "Bearer $rawToken"
-            val parameterId = 1
 
-            Log.d("AnalyticsFragment", "Token: $token, Parameter ID: $parameterId")
             if (token == null) {
                 Log.e("AnalyticsFragment", "Token tidak ditemukan.")
                 return@launch
             }
 
-            analyticsViewModel.fetchSalaryParameter("$token", parameterId)
+            analyticsViewModel.userPosition?.observe(viewLifecycleOwner) { userPosition ->
+                Log.d("AnalyticsFragment", "User Position : $userPosition")
+                val parameterId = if(userPosition == "Chef") 1 else 2
+                Log.d("AnalyticsFragment", "Token: $token, Parameter ID: $parameterId")
+
+                analyticsViewModel.fetchSalaryParameter("$token", parameterId)
+            }
+
+            analyticsViewModel.errorMessage.observe(viewLifecycleOwner) { errorMessage ->
+                errorMessage?.let {
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -122,7 +134,7 @@ class AnalyticsFragment : Fragment() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
         val today = dateFormat.format(Date())
-        Log.d("AnalyticsFragment", "getToday date : $today")
+//        Log.d("AnalyticsFragment", "getToday date : $today")
         return today
     }
 
@@ -154,24 +166,40 @@ class AnalyticsFragment : Fragment() {
 
     private fun calculateOvertimePayment(filteredLogs: List<AttendanceLog>? = null, salaryData: SalaryData) : Double {
         val today = getTodayDate()
+        val standardLogoutHour = 21
+        val fullDateFormat = SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).apply {
+            timeZone = TimeZone.getTimeZone("GMT")
+        }
 
-        val todayOvertimeLog = filteredLogs?.filter {
-            val logDate = try {
-                val logDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-                val parsedDate = logDateFormat.format(SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US).parse(it.tanggal)!!)
-//                Log.d("AnalyticsFragment", "Parsed Log Date from overtime: $parsedDate, Today: $today")
-                parsedDate == today
+        val logDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US).apply {
+            timeZone = TimeZone.getTimeZone("GMT")
+        }
+
+        val totalOvertimeHours = filteredLogs?.sumOf { log ->
+            try {
+                val logDate = fullDateFormat.parse(log.tanggal)
+                val parsedDate = logDateFormat.format(logDate!!)
+                Log.d("AnalyticsFragment", "Parsed Log Date from overtime: $parsedDate, Today: $today")
+
+                if(parsedDate == today && log.status_logout == "overtime") {
+                    val logoutTime = log.logout_time?.let { fullDateFormat.parse(it) }
+
+                    if(logoutTime != null) {
+                        val calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT")).apply { time = logoutTime }
+                        val logoutHours = calendar.get(Calendar.HOUR_OF_DAY)
+                        Log.d("AnalyticsFragment", "Logout hour: $logoutHours, Standard logout: $standardLogoutHour")
+
+                        return@sumOf maxOf(0, logoutHours - standardLogoutHour)
+                    }
+                }
             } catch (e: Exception) {
-                false
+                Log.e("AnalyticsFragment", "Error parsing log data for overtime", e)
             }
+            return@sumOf 0
+        } ?: 0
 
-            logDate && it.status_logout == "overtime"
-        } ?: emptyList()
-
-        val overtimeCount = todayOvertimeLog.size
-        Log.d("AnalyticsFragment", "overtimeCount : $overtimeCount")
-
-        return overtimeCount * salaryData.lembur
+        Log.d("AnalyticsFragment", "Total Overtime Hours: $totalOvertimeHours")
+        return totalOvertimeHours * salaryData.lembur
     }
 
     @SuppressLint("SetTextI18n")
